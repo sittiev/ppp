@@ -195,6 +195,15 @@ figcaption.credit a {
     cursor: default;
 }
 
+.help-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    text-decoration: none;
+}
+
 fieldset.now-playing-box {
     margin: 0 0 4px;
 }
@@ -288,8 +297,11 @@ a[role="button"]:focus-visible {
 }
 
 @media (max-width: 480px) {
+    body {
+        padding: 16px;
+    }
     .card-window {
-        max-width: 92vw;
+        max-width: 100%;
         margin-bottom: 32px;
     }
     .window-body h1 {
@@ -309,11 +321,10 @@ a[role="button"]:focus-visible {
 
 @media (max-width: 360px) {
     body {
-        padding-block: calc(16px + env(safe-area-inset-top))
-            calc(16px + env(safe-area-inset-bottom));
+        padding: 12px;
     }
     .card-window {
-        max-width: calc(100vw - 16px);
+        max-width: 100%;
     }
     .window-body h1 {
         font-size: 1.3rem;
