@@ -1,0 +1,409 @@
+:root {
+    --font-ui: "Segoe UI", Tahoma, "Noto Sans", sans-serif;
+    --ink: #1a1a1a;
+    --ink-mid: #4a4a4a;
+    --ink-soft: #5a5a5a;
+    --ink-muted: #6b6b6b;
+    --line: #7a7a7a;
+    --surface: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_arrow.cur"),
+        auto;
+}
+
+a,
+a[role="button"],
+button {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_link.cur"),
+        pointer;
+}
+
+a:active,
+a[role="button"]:active,
+button:active {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_select.cur"),
+        pointer;
+}
+
+input,
+textarea,
+[contenteditable] {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_text.cur"),
+        text;
+}
+
+body {
+    margin: 0;
+    min-height: 100dvh;
+    display: flex;
+    padding: calc(24px + env(safe-area-inset-top))
+        calc(16px + env(safe-area-inset-right))
+        calc(24px + env(safe-area-inset-bottom))
+        calc(16px + env(safe-area-inset-left));
+    font-family: var(--font-ui);
+    background: linear-gradient(180deg, #e1e1e1 0%, #cfcfcf 45%, #bcbcbc 100%);
+    background-attachment: fixed;
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--surface);
+    color: #000;
+    padding: 8px 12px;
+    z-index: 100;
+    border: 2px solid var(--ink-muted);
+}
+.skip-link:focus {
+    left: 16px;
+    top: 16px;
+}
+
+.card-window {
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
+    --w7-w-bg: #969696;
+}
+
+.window-body h1 {
+    margin: 4px 0 0;
+    font-size: 1.6rem;
+    line-height: 1.1;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.window-body .subtitle {
+    margin: 2px 0 16px;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+}
+
+.link-list {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.link-list a[role="button"] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 36px;
+    text-align: left;
+}
+
+.link-list svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    color: var(--ink-mid);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+fieldset.photo-box {
+    margin: 0 0 4px;
+}
+
+fieldset.avatar-box {
+    margin: 0 0 4px;
+}
+
+.avatar-wrap {
+    position: relative;
+    display: block;
+    width: 139px;
+    margin: 0 auto;
+}
+
+.avatar-frame {
+    position: relative;
+    display: block;
+    width: 139px;
+    height: 139px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+#discord-avatar {
+    position: absolute;
+    top: 19px;
+    left: 25px;
+    width: 93px;
+    height: 93px;
+    object-fit: cover;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.photo-frame {
+    padding: 4px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: inset 0 0 0 1px var(--surface);
+}
+
+.photo-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+figcaption.credit {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    text-align: right;
+}
+
+figcaption.credit a {
+    color: var(--ink-mid);
+}
+
+.title-bar-controls button {
+    cursor: default;
+}
+
+fieldset.now-playing-box {
+    margin: 0 0 4px;
+}
+
+.np-empty {
+    margin: 0;
+    padding: 4px 2px;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    font-style: italic;
+}
+
+.np-track {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.np-art {
+    flex: none;
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: inset 0 0 0 1px var(--surface);
+}
+
+.np-meta {
+    min-width: 0;
+    flex: 1;
+}
+
+.np-title,
+.np-artist {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.np-title {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 1.05rem;
+}
+
+.np-artist {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-top: 1px;
+}
+
+.np-progress-wrap {
+    margin: 8px 0 4px;
+}
+
+.np-progress {
+    height: 8px;
+    background: #c0c0c0;
+    border: 1px solid var(--line);
+    overflow: hidden;
+}
+
+.np-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--ink);
+    transition: width 1s linear;
+}
+
+.np-times {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+a:focus-visible,
+a[role="button"]:focus-visible {
+    outline: none;
+}
+
+.status-bar .status-bar-field {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+    .card-window {
+        max-width: 92vw;
+        margin-bottom: 32px;
+    }
+    .window-body h1 {
+        font-size: 1.4rem;
+    }
+    .np-art {
+        width: 64px;
+        height: 64px;
+    }
+    .np-title {
+        font-size: 0.95rem;
+    }
+    .np-artist {
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 360px) {
+    body {
+        padding-block: calc(16px + env(safe-area-inset-top))
+            calc(16px + env(safe-area-inset-bottom));
+    }
+    .card-window {
+        max-width: calc(100vw - 16px);
+    }
+    .window-body h1 {
+        font-size: 1.3rem;
+    }
+    .np-art {
+        width: 56px;
+        height: 56px;
+    }
+    .np-title {
+        font-size: 0.9rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+[disabled],
+[aria-disabled="true"] {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_unavail.cur"),
+        not-allowed;
+}
+
+.wait,
+[aria-busy="true"],
+.loading {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_busy.ani"),
+        wait;
+}
+
+.progress {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_working.ani"),
+        progress;
+}
+
+.help {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_helpsel.cur"),
+        help;
+}
+
+.ns-resize,
+[style*="ns-resize"],
+[class*="ns-resize"] {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_ns.cur"),
+        ns-resize;
+}
+
+.ew-resize,
+[style*="ew-resize"],
+[class*="ew-resize"] {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_ew.cur"),
+        ew-resize;
+}
+
+.nwse-resize {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_nwse.cur"),
+        nwse-resize;
+}
+
+.nesw-resize {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_nesw.cur"),
+        nesw-resize;
+}
+
+.move,
+[style*="move"] {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_move.cur"),
+        move;
+}
+
+.title-bar-controls button {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_arrow.cur"),
+        default;
+}
+
+.title-bar {
+    cursor:
+        url("assets/images/cursors/windows vista-7 cursor/windows7_move.cur"),
+        default;
+}

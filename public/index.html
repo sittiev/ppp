@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <title>C:/</title>
+        <meta name="description" content="rafael" />
+        <meta name="color-scheme" content="light" />
+        <meta name="theme-color" content="#9a9a9a" />
+
+        <link rel="preconnect" href="https://unpkg.com" crossorigin />
+        <link
+            rel="preconnect"
+            href="https://upload.wikimedia.org"
+            crossorigin
+        />
+        <link rel="preconnect" href="https://cdn.discordapp.com" crossorigin />
+        <link rel="stylesheet" href="https://unpkg.com/7.css" />
+        <link rel="stylesheet" href="styles.css" />
+        <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+        <script
+            src="https://unpkg.com/colorthief@2.4.0/dist/color-thief.umd.js"
+            defer
+        ></script>
+    </head>
+    <body>
+        <main
+            id="conteudo"
+            class="window active card-window"
+            aria-label="Cartão de perfil de Rafael"
+        >
+            <div class="title-bar">
+                <div class="title-bar-text">Rafael</div>
+                <div class="title-bar-controls" aria-hidden="true">
+                    <button
+                        class="is-help"
+                        aria-label="Help"
+                        onclick="
+                            window.open(
+                                'https://github.com/sittiev/ppp',
+                                '_blank',
+                            )
+                        "
+                        tabindex="-1"
+                    ></button>
+                    <button
+                        class="is-minimize"
+                        aria-label="Minimizar"
+                        tabindex="-1"
+                    ></button>
+                    <button
+                        class="is-maximize"
+                        aria-label="Maximizar"
+                        tabindex="-1"
+                    ></button>
+                    <button
+                        class="is-close"
+                        aria-label="Fechar"
+                        tabindex="-1"
+                    ></button>
+                </div>
+            </div>
+
+            <div class="window-body has-space">
+                <fieldset class="avatar-box">
+                    <legend>Avatar</legend>
+                    <div class="avatar-wrap">
+                        <div class="avatar-frame">
+                            <img
+                                id="discord-avatar"
+                                alt="Avatar"
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <img
+                                class="avatar-overlay"
+                                src="assets/images/frame.webp"
+                                alt=""
+                                aria-hidden="true"
+                            />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <nav aria-label="Redes e projetos">
+                    <ul class="link-list">
+                        <li>
+                            <a
+                                role="button"
+                                href="https://instagram.com/sxraphael"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Instagram
+                                <span class="visually-hidden"
+                                    >(abre em nova aba)</span
+                                >
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                role="button"
+                                href="https://github.com/sittiev"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                GitHub
+                                <span class="visually-hidden"
+                                    >(abre em nova aba)</span
+                                >
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <fieldset class="photo-box">
+                    <legend>Rio de Janeiro</legend>
+                    <figure style="margin: 0">
+                        <div class="photo-frame">
+                            <img
+                                src="https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=800"
+                                srcset="
+                                    https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=480   480w,
+                                    https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=800   800w,
+                                    https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=1200 1200w
+                                "
+                                sizes="(max-width: 480px) 92vw, 460px"
+                                width="800"
+                                height="600"
+                                alt="Vista aérea do Vidigal, comunidade encostada no Morro Dois Irmãos, na Zona Sul do Rio de Janeiro"
+                                loading="eager"
+                                decoding="async"
+                            />
+                        </div>
+                        <figcaption class="credit">
+                            Foto:
+                            <a
+                                href="https://commons.wikimedia.org/wiki/User:Chensiyuan"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >Chensiyuan</a
+                            >,
+                            <a
+                                href="https://creativecommons.org/licenses/by-sa/4.0"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >CC BY-SA 4.0</a
+                            >
+                        </figcaption>
+                    </figure>
+                </fieldset>
+
+                <fieldset class="now-playing-box">
+                    <legend>Tocando agora</legend>
+                    <div
+                        class="np-body"
+                        id="np-body"
+                        aria-live="polite"
+                        hx-get="/api/now-playing"
+                        hx-trigger="load, every 10s"
+                        hx-swap="innerHTML"
+                        hx-on:after-swap="updatePlayer(event)"
+                    >
+                        <p class="np-empty">carregando…</p>
+                    </div>
+                    <div class="np-progress-wrap" id="np-progress-wrap" hidden>
+                        <div class="np-progress" id="np-progress-bar"></div>
+                        <div class="np-times">
+                            <span id="np-elapsed">0:00</span>
+                            <span id="np-total">0:00</span>
+                        </div>
+                    </div>
+                    <audio id="np-audio" preload="auto" hidden></audio>
+                </fieldset>
+            </div>
+
+            <div class="status-bar">
+                <p class="status-bar-field" id="clock"></p>
+            </div>
+        </main>
+
+        <script src="assets/player.js" defer></script>
+        <script src="assets/avatar.js" defer></script>
+    </body>
+</html>
