@@ -289,7 +289,7 @@ a[role="button"]:focus-visible {
 
 .visitors {
     position: absolute;
-    top: -34px;
+    top: -28px;
     right: -118px;
     width: max-content;
     display: flex;
@@ -345,6 +345,12 @@ a[role="button"]:focus-visible {
     }
     .np-artist {
         font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .v-last {
+        display: none;
     }
 }
 
