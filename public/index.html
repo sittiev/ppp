@@ -77,6 +77,16 @@
                                 aria-hidden="true"
                             />
                         </div>
+                        <p
+                            class="visitors is-top is-right"
+                            id="visitors"
+                            role="tooltip"
+                            hx-get="/api/visitors"
+                            hx-trigger="load, every 10s"
+                            hx-swap="innerHTML"
+                        >
+                            visitantes…
+                        </p>
                     </div>
                 </fieldset>
 

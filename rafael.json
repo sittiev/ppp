@@ -1,0 +1,16 @@
+{
+    "title": "Rafael - Personal Profile",
+    "description": "Personal profile page for Discord bio",
+    "domain": "creepers.lol",
+    "subdomain": "rafael",
+    "country_code": "none",
+    "owner": {
+        "github_user": "https://github.com/sittiev",
+        "email": "py1inbox@gmail.com",
+        "discord": "@bansheephotoshoot"
+    },
+    "record": {
+        "CNAME": "rafaeld.vercel.app"
+    },
+    "proxy": "false"
+}

@@ -6,6 +6,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { config } from "./config.js";
 import { getNowPlaying, renderHtml } from "./api/now-playing.js";
+import { trackAndGetStats, renderHtml as renderVisitorsHtml } from "./api/visitors.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = new Hono();
@@ -38,6 +39,39 @@ app.get("/api/discord-user", (c) => {
         return c.json({ error: "Discord user ID not configured" }, 404);
     }
     return c.json({ userId: config.discordUserId });
+});
+
+app.get("/api/visitors", async (c) => {
+    try {
+        let city = c.req.header("x-vercel-ip-city") || "";
+        try {
+            city = decodeURIComponent(city);
+        } catch {}
+
+        const visitor = {
+            ip: (c.req.header("x-forwarded-for") || "").split(",")[0].trim(),
+            userAgent: c.req.header("user-agent") || "",
+            country: c.req.header("x-vercel-ip-country") || "",
+            city,
+        };
+
+        const stats = await trackAndGetStats(visitor);
+
+        if (c.req.header("hx-request") === "true") {
+            return c.html(renderVisitorsHtml(stats));
+        }
+
+        return c.json(stats);
+    } catch (error) {
+        console.error("visitors handler failed", { error: error.message });
+        return c.json(
+            {
+                code: "VISITORS_FAILED",
+                message: "Unable to track visit.",
+            },
+            500,
+        );
+    }
 });
 
 if (!process.env.VERCEL) {
