@@ -214,14 +214,76 @@ fieldset.now-playing-box {
     margin-bottom: 8px;
 }
 
-.np-art {
+.np-jewel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     flex: none;
+}
+
+@keyframes np-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+.np-disc {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    margin-left: -25px;
+    margin-right: -2px;
+    z-index: 1;
+    animation: np-spin 0.9s linear infinite;
+    transition: margin-left 0.6s ease;
+}
+
+.np-jewel:hover .np-disc {
+    margin-left: -33px;
+}
+
+.np-art {
+    position: static;
+    margin-left: 7px;
     width: 72px;
     height: 72px;
     object-fit: cover;
     background: var(--surface);
     border: 1px solid var(--line);
     box-shadow: inset 0 0 0 1px var(--surface);
+    z-index: 2;
+}
+
+@keyframes np-wiggle {
+    0%,
+    88%,
+    100% {
+        transform: none;
+    }
+    90% {
+        transform: rotate(-1.6deg) translateX(-2px);
+    }
+    93% {
+        transform: rotate(1.1deg) translateX(1px);
+    }
+    96% {
+        transform: rotate(-0.5deg);
+    }
+}
+
+.np-case {
+    position: absolute;
+    top: -2px;
+    margin-left: 1px;
+    width: 80px;
+    height: 74px;
+    z-index: 3;
+    transform-origin: left center;
+    animation: np-wiggle 4s ease-in-out infinite;
 }
 
 .np-meta {
@@ -336,9 +398,25 @@ a[role="button"]:focus-visible {
     .window-body h1 {
         font-size: 1.4rem;
     }
-    .np-art {
+    .np-jewel {
+        width: auto;
+    }
+    .np-disc {
         width: 64px;
         height: 64px;
+        margin-left: -22px;
+        margin-right: -2px;
+    }
+    .np-art {
+        margin-left: 6px;
+        width: 64px;
+        height: 64px;
+    }
+    .np-case {
+        top: -1px;
+        margin-left: 1px;
+        width: 71px;
+        height: 66px;
     }
     .np-title {
         font-size: 0.95rem;
@@ -397,9 +475,25 @@ a[role="button"]:focus-visible {
     .window-body h1 {
         font-size: 1.3rem;
     }
-    .np-art {
+    .np-jewel {
+        width: auto;
+    }
+    .np-disc {
         width: 56px;
         height: 56px;
+        margin-left: -19px;
+        margin-right: -2px;
+    }
+    .np-art {
+        margin-left: 5px;
+        width: 56px;
+        height: 56px;
+    }
+    .np-case {
+        top: -1px;
+        margin-left: 1px;
+        width: 62px;
+        height: 58px;
     }
     .np-title {
         font-size: 0.9rem;

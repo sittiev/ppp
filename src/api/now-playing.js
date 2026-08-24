@@ -129,9 +129,13 @@ function renderHtml(track) {
     }
     return `
     <div class="np-track" data-url="${esc(track.trackUrl)}" data-preview="${esc(track.preview)}" data-duration="${track.duration || 0}">
-      <img class="np-art" src="${esc(track.albumArt)}"
-           alt="Capa do álbum ${esc(track.album)}"
-           width="72" height="72" loading="lazy" />
+      <div class="np-jewel">
+        <img class="np-disc" src="assets/images/cd.png" alt="" aria-hidden="true" />
+        <img class="np-art" src="${esc(track.albumArt)}"
+             alt="Capa do álbum ${esc(track.album)}"
+             width="72" height="72" loading="lazy" />
+        <img class="np-case" src="assets/images/jewel_case.png" alt="" aria-hidden="true" />
+      </div>
       <div class="np-meta">
         <p class="np-title">${esc(track.title)}</p>
         <p class="np-artist">${esc(track.artist)}</p>
