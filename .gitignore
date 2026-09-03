@@ -3,3 +3,4 @@ tmp/
 .env
 .vercel
 opencode.json
+AGENTS.md
