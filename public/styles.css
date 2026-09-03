@@ -48,8 +48,7 @@ body {
         calc(24px + env(safe-area-inset-bottom))
         calc(16px + env(safe-area-inset-left));
     font-family: var(--font-ui);
-    background: linear-gradient(180deg, #e1e1e1 0%, #cfcfcf 45%, #bcbcbc 100%);
-    background-attachment: fixed;
+    background: var(--surface) url("assets/images/wallpapers/wallpaper-1.jpg") center/cover fixed no-repeat;
 }
 
 .skip-link {
