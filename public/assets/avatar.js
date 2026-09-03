@@ -91,17 +91,6 @@
                 return luminance(rgb) >= 40;
             });
             if (lightColors.length < 2) return;
-            var mid = Math.floor((lightColors.length - 1) / 2);
-            var stops = [
-                lightColors[0],
-                lightColors[mid],
-                lightColors[lightColors.length - 1],
-            ]
-                .map(toCssColor)
-                .join(", ");
-            document.body.style.background =
-                "linear-gradient(180deg, " + stops + ")";
-            document.body.style.backgroundAttachment = "fixed";
             applyWindowColor(palette);
         } catch (error) {
             console.warn("background from avatar failed", {
