@@ -125,35 +125,10 @@
                     <legend>Rio de Janeiro</legend>
                     <figure style="margin: 0">
                         <div class="photo-frame">
-                            <img
-                                src="https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=800"
-                                srcset="
-                                    https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=480   480w,
-                                    https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=800   800w,
-                                    https://commons.wikimedia.org/wiki/Special:FilePath/1%20vidigal%20favela%20rio%202014.jpg?width=1200 1200w
-                                "
-                                sizes="(max-width: 480px) 92vw, 460px"
-                                width="800"
-                                height="600"
-                                alt="Vista aérea do Vidigal, comunidade encostada no Morro Dois Irmãos, na Zona Sul do Rio de Janeiro"
-                                loading="eager"
-                                decoding="async"
-                            />
+                            <div class="photo-banner" id="photo-banner"></div>
                         </div>
                         <figcaption class="credit">
-                            Foto:
-                            <a
-                                href="https://commons.wikimedia.org/wiki/User:Chensiyuan"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                >Chensiyuan</a
-                            >,
-                            <a
-                                href="https://creativecommons.org/licenses/by-sa/4.0"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                >CC BY-SA 4.0</a
-                            >
+                            Foto: Fonte não identificada
                         </figcaption>
                     </figure>
                 </fieldset>
@@ -187,7 +162,56 @@
             </div>
         </main>
 
-        <script src="assets/player.js" defer></script>
-        <script src="assets/avatar.js" defer></script>
+        <dialog
+            id="update-dialog"
+            class="window active"
+            aria-labelledby="update-dialog-title"
+        >
+            <div class="title-bar">
+                <div class="title-bar-text" id="update-dialog-title">
+                    <img
+                        class="update-title-icon"
+                        src="assets/images/windows-shield.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="16"
+                        height="16"
+                    />
+                    Windows Update
+                </div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body has-space update-body">
+                <div class="update-banner">
+                    <img
+                        class="update-shield"
+                        src="assets/images/windows-shield.svg"
+                        alt=""
+                        aria-hidden="true"
+                        width="32"
+                        height="32"
+                    />
+                    <p class="update-headline">
+                        Recarregue a página para concluir a instalação das
+                        atualizações importantes
+                    </p>
+                </div>
+                <p class="update-text">
+                    A página será recarregada automaticamente em
+                    <span id="update-countdown">12</span>&nbsp;s.
+                </p>
+            </div>
+            <footer class="update-actions">
+                <button id="update-reload" class="default">
+                    Recarregar agora
+                </button>
+            </footer>
+        </dialog>
+
+        <script src="assets/player.js?v=__V__" defer></script>
+        <script src="assets/avatar.js?v=__V__" defer></script>
+        <script src="assets/app.js?v=__V__" defer></script>
     </body>
 </html>
