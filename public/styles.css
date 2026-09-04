@@ -185,17 +185,9 @@ fieldset.avatar-box {
 .banner-4 { background-image: url("assets/images/banner-rio-4.jpg"); }
 
 
-
-figcaption.credit {
-    margin-top: 6px;
-    font-size: 0.78rem;
     color: var(--ink-muted);
     text-align: right;
-}
 
-figcaption.credit a {
-    color: var(--ink-mid);
-}
 
 .title-bar-controls button {
     cursor: default;
@@ -524,77 +516,24 @@ a[role="button"]:focus-visible {
 
 [disabled],
 [aria-disabled="true"] {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_unavail.cur"),
-        not-allowed;
+    cursor: not-allowed;
 }
 
 .wait,
 [aria-busy="true"],
 .loading {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_busy.ani"),
-        wait;
+    cursor: wait;
 }
 
 .progress {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_working.ani"),
-        progress;
+    cursor: progress;
 }
 
 .help {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_helpsel.cur"),
-        help;
+    cursor: help;
 }
 
-.ns-resize,
-[style*="ns-resize"],
-[class*="ns-resize"] {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_ns.cur"),
-        ns-resize;
-}
 
-.ew-resize,
-[style*="ew-resize"],
-[class*="ew-resize"] {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_ew.cur"),
-        ew-resize;
-}
-
-.nwse-resize {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_nwse.cur"),
-        nwse-resize;
-}
-
-.nesw-resize {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_nesw.cur"),
-        nesw-resize;
-}
-
-.move,
-[style*="move"] {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_move.cur"),
-        move;
-}
-
-.title-bar-controls button {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_arrow.cur"),
-        default;
-}
-
-.title-bar {
-    cursor:
-        url("assets/images/cursors/windows vista-7 cursor/windows7_move.cur"),
-        default;
-}
 
 #update-dialog {
     width: min(420px, calc(100vw - 24px));
@@ -663,7 +602,7 @@ a[role="button"]:focus-visible {
 }
 
 #update-dialog .window-body {
-    padding: 0 !important;
+    padding: 0 0 8px 0 !important;
     margin: 0 !important;
 }
 
@@ -704,6 +643,18 @@ a[role="button"]:focus-visible {
     padding: 12px 16px;
     border-top: 1px solid #e0e0e0;
     background: #f5f5f5;
+    margin: 0 !important;
+    padding-bottom: 12px !important;
+}
+
+dialog .update-actions,
+.window .update-actions {
+    margin: 0 !important;
+}
+
+dialog .update-actions {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 .update-actions button {
@@ -738,3 +689,313 @@ a[role="button"]:focus-visible {
     }
 }
 
+/* ============================
+   Apps Grid
+   ============================ */
+
+fieldset.apps-box {
+    margin: 0 0 4px;
+}
+
+.desktop-apps {
+    display: flex;
+    gap: 12px;
+    padding: 4px 0;
+}
+
+.desktop-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    transition: background 0.1s;
+}
+
+.desktop-app:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.desktop-app:active {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.desktop-app img {
+    width: 48px;
+    height: 48px;
+    image-rendering: auto;
+    pointer-events: none;
+    filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.5));
+}
+
+.desktop-app span {
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* ============================
+   Guestbook — Danmaku Overlay
+   ============================ */
+
+.gb-danmaku-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.gb-danmaku-overlay .danmaku-item {
+    text-shadow:
+        -1px -1px 1px rgba(0,0,0,0.7),
+         1px -1px 1px rgba(0,0,0,0.7),
+        -1px  1px 1px rgba(0,0,0,0.7),
+         1px  1px 1px rgba(0,0,0,0.7),
+         0 0 3px rgba(0,0,0,0.4);
+    font-weight: 400;
+    font-size: 22px;
+    color: #fff;
+    font-family: sans-serif;
+}
+
+/* ============================
+   Guestbook Dialog — Frutiger Aero
+   ============================ */
+
+#guestbook-dialog {
+    width: min(400px, calc(100vw - 24px));
+    padding: 0;
+    border: none;
+    border-radius: 10px 10px 6px 6px;
+    overflow: hidden;
+    --w7-w-bg: #fff;
+}
+
+#guestbook-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(10px) saturate(1.4);
+}
+
+#guestbook-dialog.window {
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.08),
+        0 12px 40px rgba(0, 40, 80, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+#guestbook-dialog[open] {
+    animation: updateDialogIn 0.25s ease;
+}
+
+/* Title bar — glossy sky gradient */
+#guestbook-dialog .title-bar {
+    background: linear-gradient(180deg,
+        #6bb8e8 0%,
+        #3a9fd8 15%,
+        #2186d0 40%,
+        #1a72c0 60%,
+        #2570b4 80%,
+        #1d5fa0 100%
+    );
+    color: #fff;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    text-shadow: 0 1px 2px rgba(0, 20, 60, 0.5);
+    position: relative;
+}
+
+#guestbook-dialog .title-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+        rgba(255,255,255,0.35) 0%,
+        rgba(255,255,255,0.08) 100%
+    );
+    pointer-events: none;
+    border-radius: 10px 10px 0 0;
+}
+
+#guestbook-dialog .title-bar-text {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 20, 60, 0.5) !important;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+#guestbook-dialog .title-bar-controls {
+    display: flex;
+    position: relative;
+    z-index: 1;
+}
+
+#guestbook-dialog .title-bar-controls button {
+    background: linear-gradient(180deg,
+        rgba(255,255,255,0.3) 0%,
+        rgba(255,255,255,0.1) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 1rem;
+    cursor: default;
+    width: 26px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    opacity: 1;
+    transition: background 0.15s;
+}
+
+#guestbook-dialog .title-bar-controls button:hover {
+    background: linear-gradient(180deg,
+        rgba(255,255,255,0.5) 0%,
+        rgba(255,255,255,0.25) 100%
+    );
+    border-color: rgba(255,255,255,0.5);
+}
+
+#guestbook-dialog .title-bar-controls button:active {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* Body — frosted glass white */
+.guestbook-body {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: rgba(255,255,255,0.97);
+}
+
+/* Messages area */
+.guestbook-body .gb-messages {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 8px 14px;
+    scroll-behavior: smooth;
+    background: linear-gradient(180deg,
+        rgba(220,238,255,0.3) 0%,
+        rgba(255,255,255,0) 100%
+    );
+    border-bottom: 1px solid rgba(0, 100, 180, 0.12);
+}
+
+.gb-empty {
+    margin: 0;
+    padding: 8px 0;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #5a8aaa;
+    font-style: italic;
+}
+
+.gb-msg {
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0, 100, 180, 0.07);
+}
+
+.gb-msg:last-child {
+    border-bottom: none;
+}
+
+.gb-msg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1px;
+}
+
+.gb-msg-author {
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: #1a72c0;
+}
+
+.gb-msg-time {
+    font-size: 0.68rem;
+    color: #8ab4d8;
+}
+
+.gb-msg-text {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #2a3a4a;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+/* Form area */
+.guestbook-body .gb-form {
+    padding: 12px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.guestbook-body .gb-form label {
+    font-size: 0.78rem;
+    color: #3a6a8a;
+    margin-bottom: 2px;
+    display: block;
+    font-weight: 500;
+}
+
+.guestbook-body .gb-form textarea {
+    resize: vertical;
+    min-height: 48px;
+}
+
+.guestbook-body .gb-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.gb-error {
+    flex: 1;
+    margin: 0;
+    font-size: 0.78rem;
+    color: #c00;
+}
+
+.gb-error:empty {
+    display: none;
+}
+
+@media (max-width: 400px) {
+    #guestbook-dialog {
+        width: calc(100vw - 16px);
+        border-radius: 0;
+    }
+    .guestbook-body .gb-messages {
+        max-height: 96px;
+        padding: 6px 10px;
+    }
+    .guestbook-body .gb-form {
+        padding: 8px 10px 10px;
+    }
+}

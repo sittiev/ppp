@@ -122,16 +122,14 @@
                     </ul>
                 </nav>
 
-                <fieldset class="photo-box">
-                    <legend>Rio de Janeiro</legend>
-                    <figure style="margin: 0">
-                        <div class="photo-frame">
-                            <div class="photo-banner" id="photo-banner"></div>
-                        </div>
-                        <figcaption class="credit">
-                            Foto: Fonte não identificada
-                        </figcaption>
-                    </figure>
+                <fieldset class="card-window">
+                    <legend>Programas</legend>
+                    <div class="desktop-apps">
+                        <button class="desktop-app" commandfor="guestbook-dialog" command="show-modal">
+                            <img src="/assets/images/apps/guestbook.png" alt="" width="48" height="48" draggable="false">
+                            <span>Say Something Cool</span>
+                        </button>
+                    </div>
                 </fieldset>
 
                 <fieldset class="now-playing-box">
@@ -211,8 +209,66 @@
             </footer>
         </dialog>
 
+        <div class="gb-danmaku-overlay" id="gb-danmaku-overlay"></div>
+
+        <dialog
+            id="guestbook-dialog"
+            class="window active"
+            aria-labelledby="guestbook-dialog-title"
+        >
+            <div class="title-bar">
+                <div class="title-bar-text" id="guestbook-dialog-title">GuestBook</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close" id="gb-dialog-close">×</button>
+                </div>
+            </div>
+            <div class="window-body has-space guestbook-body">
+                <div class="gb-messages has-scrollbar" id="gb-messages">
+                    <p class="gb-empty">carregando…</p>
+                </div>
+                <form
+                    id="guestbook-form"
+                    class="gb-form"
+                    hx-post="/api/guestbook"
+                    hx-swap="none"
+                    hx-target="this"
+                    hx-on:htmx:before-request="document.getElementById('gb-submit-btn').disabled = true"
+                    novalidate
+                >
+                    <div class="group">
+                        <label for="gb-author">Nome</label>
+                        <input
+                            id="gb-author"
+                            type="text"
+                            name="authorName"
+                            placeholder="Seu nome (opcional)"
+                            maxlength="30"
+                            autocomplete="off"
+                        >
+                    </div>
+                    <div class="group">
+                        <label for="gb-message">Mensagem</label>
+                        <textarea
+                            id="gb-message"
+                            name="message"
+                            placeholder="Escreva algo legal…"
+                            maxlength="280"
+                            rows="3"
+                            required
+                        ></textarea>
+                    </div>
+                    <div class="gb-form-footer">
+                        <span class="gb-error" id="gb-form-error"></span>
+                        <button type="submit" id="gb-submit-btn" class="default">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
+
+        <script src="https://cdn.jsdelivr.net/npm/danmaku@2.0.10/dist/danmaku.min.js"></script>
         <script src="assets/player.js?v=__V__" defer></script>
         <script src="assets/avatar.js?v=__V__" defer></script>
         <script src="assets/app.js?v=__V__" defer></script>
+        <script src="assets/guestbook.js?v=__V__" defer></script>
     </body>
 </html>
