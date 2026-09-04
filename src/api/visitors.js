@@ -130,7 +130,7 @@ function renderHtml(stats) {
     const { onlineNow, totalViews, lastVisitAt } = stats;
     const icon = (name) =>
         `<img src="assets/images/${name}.png" alt="" width="16" height="16" aria-hidden="true" />`;
-    return `<span class="v-stat v-online">${icon("system-users")}${esc(formatNumber(onlineNow))} vendo agora</span><span class="v-stat v-views">${icon("view-refresh")}${esc(formatNumber(totalViews))} visitas</span><span class="v-stat v-last">${icon("document-open-recent")}última ${esc(formatAgo(lastVisitAt))}</span>`;
+    return `<span class="v-stat v-online">${icon("system-users")}${esc(formatNumber(onlineNow))} vendo agora</span><span class="v-stat v-views">${icon("view-refresh")}${esc(formatNumber(totalViews))} visitas</span><span class="v-stat v-last">${icon("apps/clock")}última ${esc(formatAgo(lastVisitAt))}</span>`;
 }
 
 export { trackAndGetStats, renderHtml };
