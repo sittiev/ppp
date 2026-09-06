@@ -3,6 +3,7 @@ import "dotenv/config";
 const config = {
     lastfmUser: process.env.LASTFM_USER,
     lastfmKey: process.env.LASTFM_KEY,
+    youtubeKey: process.env.YOUTUBE_API_KEY,
     port: Number(process.env.DEFAULT_PORT) || 3000,
     discordUserId: process.env.DISCORD_USER_ID,
     databaseUrl: process.env.DATABASE_URL,
@@ -12,6 +13,12 @@ const config = {
 if (!config.lastfmUser || !config.lastfmKey) {
     console.warn(
         "Aviso: LASTFM_USER ou LASTFM_KEY não definidos. /api/now-playing retornará vazio.",
+    );
+}
+
+if (!config.youtubeKey) {
+    console.warn(
+        "Aviso: YOUTUBE_API_KEY não definido. Now-playing usará só Deezer.",
     );
 }
 
