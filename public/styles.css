@@ -208,7 +208,7 @@ fieldset.now-playing-box {
 .np-track {
     display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 8px;
 }
 
@@ -310,21 +310,11 @@ fieldset.now-playing-box {
 }
 
 .np-progress-wrap {
-    margin: 8px 0 4px;
+    margin: 6px 0 0;
 }
 
-.np-progress {
-    height: 8px;
-    background: #c0c0c0;
-    border: 1px solid var(--line);
-    overflow: hidden;
-}
-
-.np-progress-bar {
-    height: 100%;
-    width: 0%;
-    background: var(--ink);
-    transition: width 1s linear;
+#np-progress {
+    height: 10px;
 }
 
 .np-times {
@@ -334,6 +324,31 @@ fieldset.now-playing-box {
     font-size: 0.78rem;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
+}
+
+.np-actions {
+    margin-top: 4px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.np-actions button {
+    font-size: 0.72rem;
+    padding: 1px 10px;
+    min-height: 0;
+    min-width: 0;
+}
+
+#np-yt-wrap[hidden] {
+    display: none;
+}
+
+#np-yt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
 }
 
 a:focus-visible,
