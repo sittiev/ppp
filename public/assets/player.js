@@ -18,9 +18,15 @@
         return m + ":" + (sec < 10 ? "0" + sec : sec);
     }
 
+    function setText(id, value) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = value;
+    }
+
     function renderBar() {
         var pct = duration > 0 ? (elapsed / duration) * 100 : 0;
-        document.getElementById("np-progress-bar").style.width = pct + "%";
+        var bar = document.getElementById("np-progress-bar");
+        if (bar) bar.style.width = pct + "%";
         var outer = document.getElementById("np-progress");
         if (outer) outer.setAttribute("aria-valuenow", String(Math.round(pct)));
     }
@@ -29,8 +35,8 @@
         clearInterval(progressTimer);
         elapsed = initialElapsed || 0;
         duration = dur;
-        document.getElementById("np-total").textContent = fmt(dur);
-        document.getElementById("np-elapsed").textContent = fmt(elapsed);
+        setText("np-total", fmt(dur));
+        setText("np-elapsed", fmt(elapsed));
         renderBar();
         progressTimer = setInterval(function () {
             elapsed += 1000;
@@ -43,7 +49,7 @@
                 playYoutube(handoffId, duration, elapsed);
                 return;
             }
-            document.getElementById("np-elapsed").textContent = fmt(elapsed);
+            setText("np-elapsed", fmt(elapsed));
             renderBar();
         }, 1000);
     }
@@ -132,11 +138,12 @@
             clearInterval(progressTimer);
             elapsed = PREVIEW_LIMIT_MS;
             duration = dur;
-            document.getElementById("np-progress-bar").style.width = "100%";
+            var stuckBar = document.getElementById("np-progress-bar");
+            if (stuckBar) stuckBar.style.width = "100%";
             var outer = document.getElementById("np-progress");
             if (outer) outer.setAttribute("aria-valuenow", "100");
-            document.getElementById("np-elapsed").textContent = fmt(PREVIEW_LIMIT_MS);
-            document.getElementById("np-total").textContent = fmt(dur);
+            setText("np-elapsed", fmt(PREVIEW_LIMIT_MS));
+            setText("np-total", fmt(dur));
             return;
         }
         if (!audio) return;
