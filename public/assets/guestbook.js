@@ -40,9 +40,12 @@
     }
 
     var DANMAKU_STYLE = {
-        font: "22px sans-serif",
-        strokeStyle: "rgba(0,0,0,0.5)",
-        lineWidth: 0.5,
+        font: "32px Arial",
+        textAlign: "start",
+        lineWidth: 2.0,
+        fillStyle: "#ffffff",
+        strokeStyle: "#000000",
+        direction: "inherit",
         textBaseline: "bottom",
     };
 
@@ -52,7 +55,7 @@
             danmaku = new Danmaku({
                 container: overlay,
                 engine: "canvas",
-                speed: 144,
+                speed: 100,
             });
         } catch (_) {
             try {
