@@ -1,4 +1,4 @@
-import { getSql } from "../lib/db.js";
+import { getSql, runSqlFile } from "../lib/db.js";
 import { hashClient } from "../lib/hash.js";
 import { esc } from "../lib/html.js";
 import { formatAgo } from "../lib/time.js";
@@ -10,19 +10,7 @@ let schemaReady = false;
 
 async function ensureSchema() {
     if (schemaReady) return;
-    await getSql()`
-        create table if not exists profile_visits (
-            visitor_hash text primary key,
-            country text,
-            city text,
-            user_agent text,
-            device_type text,
-            view_count integer not null default 1,
-            first_seen_at timestamptz not null default now(),
-            last_visit_at timestamptz not null default now(),
-            last_seen_at timestamptz not null default now()
-        )
-    `;
+    await runSqlFile("profile_visits.sql");
     schemaReady = true;
 }
 
