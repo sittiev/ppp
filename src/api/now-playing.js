@@ -1,4 +1,5 @@
 import { config } from "../config.js";
+import { esc } from "../lib/html.js";
 
 const CACHE_TTL_MS = 9_000;
 
@@ -10,14 +11,6 @@ let cache = {
     previewKey: "",
     previewUrl: "",
 };
-
-function esc(value) {
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-}
 
 function mapLastFmTrack(rawTrack) {
     return {

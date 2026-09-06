@@ -1,27 +1,21 @@
-import { createHash } from "crypto";
-import { neon } from "@neondatabase/serverless";
-import { config } from "../config.js";
+import { getSql } from "../lib/db.js";
+import { esc } from "../lib/html.js";
+import { formatShortAgo } from "../lib/time.js";
 
 const CACHE_TTL_MS = 15_000;
-const RATE_LIMIT_MS = 15_000;
+const RATE_LIMIT_WINDOW_SECS = 15;
+const RATE_LIMIT_MAX = 1;
 const MAX_MESSAGE_LENGTH = 280;
 const MAX_AUTHOR_LENGTH = 30;
 
-let sql = null;
 let schemaReady = false;
 
 let cache = { entries: null, fetchedAt: 0 };
 
-const rateLimits = new Map();
-
-function getSql() {
-    if (!sql) sql = neon(config.databaseUrl);
-    return sql;
-}
-
 async function ensureSchema() {
     if (schemaReady) return;
-    await getSql()`
+    const db = getSql();
+    await db`
         create table if not exists guestbook_entries (
             id bigserial primary key,
             author_name text not null default 'Anônimo',
@@ -105,25 +99,11 @@ function mapEntry(row) {
     };
 }
 
-function formatTimeAgo(isoDate) {
-    if (!isoDate) return "";
-    const seconds = Math.max(
-        0,
-        Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000),
-    );
-    if (seconds < 60) return "agora";
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}min`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h`;
-    return `${Math.floor(hours / 24)}d`;
-}
-
 function renderEntryHtml(entry) {
     return `<div class="gb-msg">
         <div class="gb-msg-header">
             <span class="gb-msg-author">${esc(entry.authorName)}</span>
-            <span class="gb-msg-time">${esc(formatTimeAgo(entry.createdAt))}</span>
+            <span class="gb-msg-time">${esc(formatShortAgo(entry.createdAt))}</span>
         </div>
         <p class="gb-msg-text">${esc(entry.message)}</p>
     </div>`;

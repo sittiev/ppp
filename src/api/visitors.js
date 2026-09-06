@@ -1,17 +1,12 @@
-import { createHash } from "crypto";
-import { neon } from "@neondatabase/serverless";
-import { config } from "../config.js";
+import { getSql } from "../lib/db.js";
+import { hashClient } from "../lib/hash.js";
+import { esc } from "../lib/html.js";
+import { formatAgo } from "../lib/time.js";
 
 const ONLINE_WINDOW = "45 seconds";
 const SESSION_WINDOW = "30 minutes";
 
-let sql = null;
 let schemaReady = false;
-
-function getSql() {
-    if (!sql) sql = neon(config.databaseUrl);
-    return sql;
-}
 
 async function ensureSchema() {
     if (schemaReady) return;
@@ -35,12 +30,6 @@ function detectDevice(userAgent) {
     if (/bot|crawl|spider|preview|slurp/i.test(userAgent)) return "bot";
     if (/mobile|android|iphone|ipod/i.test(userAgent)) return "mobile";
     return "desktop";
-}
-
-function hashVisitor(ip, userAgent) {
-    return createHash("sha256")
-        .update(`${ip}|${userAgent}|${config.visitorSalt}`)
-        .digest("hex");
 }
 
 async function upsertVisit(db, visitorHash, visitor, deviceType) {
@@ -84,7 +73,7 @@ async function trackAndGetStats(visitor) {
     await ensureSchema();
 
     const db = getSql();
-    const visitorHash = hashVisitor(visitor.ip, visitor.userAgent);
+    const visitorHash = hashClient(visitor.ip, visitor.userAgent);
 
     await upsertVisit(db, visitorHash, visitor, detectDevice(visitor.userAgent));
     return selectVisitStats(db);
@@ -102,28 +91,6 @@ function mapStatsRow(row) {
 
 function formatNumber(value) {
     return new Intl.NumberFormat("pt-BR").format(value || 0);
-}
-
-function formatAgo(isoDate) {
-    if (!isoDate) return "—";
-    const seconds = Math.max(
-        0,
-        Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000),
-    );
-    if (seconds < 60) return "agora mesmo";
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `há ${minutes} min`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `há ${hours}h`;
-    return `há ${Math.floor(hours / 24)}d`;
-}
-
-function esc(value) {
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
 }
 
 function renderHtml(stats) {
