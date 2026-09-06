@@ -72,14 +72,22 @@
         danmaku = null;
     }
 
+    function fetchEntries() {
+        return fetch("/api/guestbook").then(function (res) {
+            return res.ok ? res.json() : [];
+        });
+    }
+
+    function formatShortAgo(createdAt) {
+        var secs = Math.max(0, Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000));
+        if (secs >= 86400) return Math.floor(secs / 86400) + "d";
+        if (secs >= 3600) return Math.floor(secs / 3600) + "h";
+        if (secs >= 60) return Math.floor(secs / 60) + "min";
+        return "agora";
+    }
+
     function buildEntryHtml(e) {
-        var now = Date.now();
-        var created = new Date(e.createdAt).getTime();
-        var secs = Math.max(0, Math.floor((now - created) / 1000));
-        var time = "agora";
-        if (secs >= 86400) time = Math.floor(secs / 86400) + "d";
-        else if (secs >= 3600) time = Math.floor(secs / 3600) + "h";
-        else if (secs >= 60) time = Math.floor(secs / 60) + "min";
+        var time = formatShortAgo(e.createdAt);
 
         return '<div class="gb-msg" data-id="' + esc(String(e.id)) + '">'
             + '<div class="gb-msg-header">'
@@ -92,10 +100,7 @@
 
     function loadInitialMessages() {
         messages.innerHTML = '<p class="gb-empty">carregando…</p>';
-        fetch("/api/guestbook")
-            .then(function (res) {
-                return res.ok ? res.json() : [];
-            })
+        fetchEntries()
             .then(function (entries) {
                 if (!Array.isArray(entries) || !entries.length) {
                     messages.innerHTML = '<p class="gb-empty">Nenhuma mensagem ainda. Seja o primeiro!</p>';
@@ -115,10 +120,7 @@
     }
 
     function pollNewMessages() {
-        fetch("/api/guestbook")
-            .then(function (res) {
-                return res.ok ? res.json() : [];
-            })
+        fetchEntries()
             .then(function (entries) {
                 if (!Array.isArray(entries)) return;
                 for (var i = 0; i < entries.length; i++) {
@@ -256,10 +258,7 @@
             });
         }
 
-        fetch("/api/guestbook")
-            .then(function (res) {
-                return res.ok ? res.json() : [];
-            })
+        fetchEntries()
             .then(function (entries) {
                 emitInitialAsDanmaku(entries);
                 startPolling();
