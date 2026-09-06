@@ -28,9 +28,7 @@ const app = new Hono();
 const excludedDirs = new Set([
     "node_modules",
     ".git",
-    ".next",
     "dist",
-    "__pycache__",
 ]);
 
 function computeAssetVersion(root) {
