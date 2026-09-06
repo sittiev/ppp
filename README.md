@@ -2,9 +2,9 @@ Menos é mais.
 
 ## TODO
 
-- [x] Métricas de visitantes usando Neon (PostgreSQL): quantos estão visualizando agora, última vez que visualizaram ("há x min atrás"), visualizações totais. Região e user-agent coletados, exibição pendente.
-- [ ] Otimizar tempo de carregamento da página e imagens: usar cache e evitar chamadas de imagens externas.
+- [x] Métricas de visitantes com Neon/PostgreSQL: online agora, último acesso ("há x min") e views totais.
+- [x] Testar vídeo/wallpaper frutiger aero no background em vez do gradiente.
+- [ ] Quebrar texto do título da música para evitar overflow na box.
+- [ ] Sincronizar cor de seleção e focus do botão com a paleta extraída (vibrant) e a cor da janela.
 - [ ] Player de música em tempo real.
-- [ ] Mudar a cor da seleção e focus do botão conforme a paleta de cor extraída (vibrant) e a cor setada da janela.
-- [ ] Testar vídeo/wallpaper frutigeraero como background em vez do gradiente da paleta extraída.
-- [ ] Quebrar texto quando o título da música for muito grande para a box não dar overflow.
+- [ ] Otimizar tempo de carregamento usando cache para a página e imagens e remover chamadas externas.
