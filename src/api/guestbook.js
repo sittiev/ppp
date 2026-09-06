@@ -24,35 +24,53 @@ async function ensureSchema() {
             created_at timestamptz not null default now()
         )
     `;
+    await db`
+        create table if not exists guestbook_rate_limits (
+            client_key text primary key,
+            window_start timestamptz not null default now(),
+            hit_count integer not null default 1
+        )
+    `;
+    await db`
+        create or replace function check_guestbook_rate_limit(p_key text, p_limit int, p_window_secs int)
+        returns table (allowed boolean, retry_after_secs integer)
+        language plpgsql as $$
+        declare
+            win interval := make_interval(secs => p_window_secs);
+            w_start timestamptz;
+            hits integer;
+        begin
+            perform pg_advisory_xact_lock(hashtext(p_key));
+            insert into guestbook_rate_limits as r (client_key, window_start, hit_count)
+            values (p_key, now(), 1)
+            on conflict (client_key) do update set
+                hit_count = case when r.window_start + win <= now() then 1 else r.hit_count + 1 end,
+                window_start = case when r.window_start + win <= now() then now() else r.window_start end;
+            select r.window_start, r.hit_count into w_start, hits from guestbook_rate_limits as r where r.client_key = p_key;
+            if hits <= p_limit then
+                return query select true, 0;
+            else
+                return query select false, greatest(0, ceil(extract(epoch from (w_start + win - now())))::int);
+            end if;
+            delete from guestbook_rate_limits where window_start + win * 2 < now();
+        end;
+        $$
+    `;
     schemaReady = true;
 }
 
-function hashDevice(ip, userAgent) {
-    return createHash("sha256")
-        .update(`${ip}|${userAgent}|${config.visitorSalt}`)
-        .digest("hex");
-}
-
-function isRateLimited(deviceHash) {
-    const lastPost = rateLimits.get(deviceHash);
-    if (lastPost && Date.now() - lastPost < RATE_LIMIT_MS) return true;
-    return false;
-}
-
-function markPosted(deviceHash) {
-    rateLimits.set(deviceHash, Date.now());
-}
-
-function esc(value) {
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-}
-
-function escapeAttr(value) {
-    return esc(value).replace(/'/g, "&#39;");
+async function checkRateLimit(clientKey) {
+    try {
+        await ensureSchema();
+        const [row] = await getSql()`select * from check_guestbook_rate_limit(${clientKey}, ${RATE_LIMIT_MAX}, ${RATE_LIMIT_WINDOW_SECS})`;
+        return {
+            allowed: row.allowed === true,
+            retryAfterSecs: Number(row.retry_after_secs) || 0,
+        };
+    } catch (error) {
+        console.warn("guestbook rate limit check failed", { error: error.message });
+        return { allowed: true, retryAfterSecs: 0 };
+    }
 }
 
 async function getRecentEntries() {
@@ -143,4 +161,4 @@ function validateInput(body) {
     return { ok: true, authorName, message };
 }
 
-export { getRecentEntries, insertEntry, renderHtml, renderEntryHtml, validateInput, hashDevice, isRateLimited, markPosted };
+export { getRecentEntries, insertEntry, renderHtml, renderEntryHtml, validateInput, checkRateLimit };

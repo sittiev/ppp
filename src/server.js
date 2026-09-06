@@ -15,18 +15,11 @@ import {
     renderHtml as renderGuestbookHtml,
     renderEntryHtml,
     validateInput,
-    hashDevice,
-    isRateLimited,
-    markPosted,
+    checkRateLimit,
 } from "./api/guestbook.js";
-
-function esc(value) {
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-}
+import { esc } from "./lib/html.js";
+import { hashClient, hashRateLimitKey } from "./lib/hash.js";
+import { getVerifiedIp, getUserAgent } from "./lib/request.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, "..", "public");
@@ -157,24 +150,28 @@ app.post("/api/guestbook", async (c) => {
             return c.json({ code: validation.code, message: validation.message }, 400);
         }
 
-        const ip = (c.req.header("x-forwarded-for") || "").split(",")[0].trim();
-        const userAgent = c.req.header("user-agent") || "";
-        const deviceHash = hashDevice(ip, userAgent);
+        const verifiedIp = getVerifiedIp(c);
+        const userAgent = getUserAgent(c);
+        const rateLimit = await checkRateLimit(hashRateLimitKey(verifiedIp));
 
-        if (isRateLimited(deviceHash)) {
-            const msg = "Aguarde antes de enviar outra mensagem.";
+        if (!rateLimit.allowed) {
+            const retryAfter = Math.max(1, rateLimit.retryAfterSecs);
+            c.header("Retry-After", String(retryAfter));
+            console.warn("guestbook rate limited", { retryAfterSecs: retryAfter });
+            const msg = `Aguarde ${retryAfter}s antes de enviar outra mensagem.`;
             if (c.req.header("hx-request") === "true") {
                 return c.html(`<p class="gb-error">${msg}</p>`, 429);
             }
-            return c.json({ code: "RATE_LIMITED", message: msg }, 429);
+            return c.json(
+                { code: "RATE_LIMITED", message: msg, retry_after_seconds: retryAfter },
+                429,
+            );
         }
-
-        markPosted(deviceHash);
 
         const entry = await insertEntry(
             validation.authorName,
             validation.message,
-            deviceHash,
+            hashClient(verifiedIp, userAgent),
         );
 
         if (c.req.header("hx-request") === "true") {
@@ -199,8 +196,8 @@ app.get("/api/visitors", async (c) => {
         } catch {}
 
         const visitor = {
-            ip: (c.req.header("x-forwarded-for") || "").split(",")[0].trim(),
-            userAgent: c.req.header("user-agent") || "",
+            ip: getVerifiedIp(c),
+            userAgent: getUserAgent(c),
             country: c.req.header("x-vercel-ip-country") || "",
             city,
         };
