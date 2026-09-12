@@ -1,5 +1,3 @@
-Menos é mais.
-
 ## todo
 
 - [x] Métricas de visitantes com Neon/PostgreSQL: online agora, último acesso ("há x min") e views totais.
