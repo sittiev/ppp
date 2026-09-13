@@ -708,6 +708,18 @@ dialog .update-actions {
    Apps Grid
    ============================ */
 
+.apps-fieldset {
+    border: none;
+    background: none;
+    box-shadow: none;
+    margin: 0 0 4px;
+    padding: 0;
+}
+
+.apps-fieldset legend {
+    padding: 0;
+}
+
 fieldset.apps-box {
     margin: 0 0 4px;
 }
@@ -722,25 +734,20 @@ fieldset.apps-box {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 6px;
+    gap: 2px;
+    padding: 4px;
+    width: 76px;
     background: transparent;
-    border: 1px solid transparent;
+    border: none;
     border-radius: 3px;
     font-family: var(--font-ui);
     font-size: 0.72rem;
+    line-height: 1.2;
     color: #fff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-    transition: background 0.1s;
-}
-
-.desktop-app:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-.desktop-app:active {
-    background: rgba(255, 255, 255, 0.08);
+    text-shadow:
+        1px 1px 2px rgba(0,0,0,1),
+        -1px -1px 2px rgba(0,0,0,0.4),
+        0 0 4px rgba(0,0,0,0.5);
 }
 
 .desktop-app img {
