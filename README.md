@@ -4,7 +4,7 @@
 - [x] Testar vídeo/wallpaper frutiger aero no background em vez do gradiente.
 - [x] Player de música em tempo real.
 - [ ] Controles de volume inspirado no Windows Media Player.
-- [ ] Consertar guestbook tá exibindo de forma limitada os comentários.
+- [ ] Aumentar exibição de comentários do guestbook.
 - [ ] Quebrar texto do título da música para evitar overflow na box.
 - [ ] Sincronizar cor de seleção e focus do botão com a paleta extraída (vibrant) e a cor da janela.
 - [ ] Otimizar tempo de carregamento usando cache para a página e imagens e remover chamadas externas.
