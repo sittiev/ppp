@@ -4,3 +4,4 @@ tmp/
 .vercel
 opencode.json
 AGENTS.md
+public/styles.css
