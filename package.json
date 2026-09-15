@@ -5,12 +5,25 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "npm run watch:css & node --watch src/server.js",
+    "prepare": "husky",
+    "build:css": "sass public/styles.scss public/styles.css --style=compressed --no-source-map",
+    "watch:css": "sass --watch public/styles.scss public/styles.css --style=compressed --no-source-map",
+    "lint": "biome check src/ public/",
+    "lint:fix": "biome check --write src/ public/",
+    "format": "biome format --write src/ public/",
+    "format:html": "cat public/index.html | superhtml fmt --stdin --syntax-only > public/index.html",
+    "check": "biome check src/ public/ && superhtml check --syntax-only public/index.html"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.1",
     "@neondatabase/serverless": "^1.1.0",
     "dotenv": "^17.4.2",
     "hono": "^4.13.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.13",
+    "husky": "^9.1.7",
+    "sass": "^1.104.1"
   }
 }
