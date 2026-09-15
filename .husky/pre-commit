@@ -1,0 +1,6 @@
+if git diff --cached --name-only | grep -qE '\.(js|ts|jsx|tsx|json)$'; then
+  npx biome check --staged --write
+fi
+if git diff --cached --name-only | grep -q '\.html$'; then
+  superhtml check --syntax-only public/index.html
+fi
