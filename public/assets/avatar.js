@@ -1,12 +1,10 @@
-(function () {
-    "use strict";
-
+(() => {
     var avatarEl = document.getElementById("discord-avatar");
     var DISCORD_USER_ID = null;
     var PLACEHOLDER = "assets/images/avatar.png";
 
     avatarEl.crossOrigin = "anonymous";
-    avatarEl.addEventListener("load", function () {
+    avatarEl.addEventListener("load", () => {
         applyAvatarBackground(0);
     });
 
@@ -50,12 +48,8 @@
             bucket[3] += b;
         }
         var top = Object.keys(buckets)
-            .map(function (key) {
-                return buckets[key];
-            })
-            .sort(function (a, b) {
-                return b[0] - a[0];
-            })
+            .map((key) => buckets[key])
+            .sort((a, b) => b[0] - a[0])
             .slice(0, TOP_BUCKETS);
         if (top.length < 2) return null;
         var vibrant = null;
@@ -94,7 +88,7 @@
         try {
             if (!avatarEl.complete || avatarEl.naturalWidth === 0) {
                 if (attempt < 3) {
-                    setTimeout(function () {
+                    setTimeout(() => {
                         applyAvatarBackground(attempt + 1);
                     }, 500);
                 }
@@ -103,7 +97,7 @@
             var vibrant = dominantVibrant();
             if (!vibrant) {
                 if (attempt < 3) {
-                    setTimeout(function () {
+                    setTimeout(() => {
                         applyAvatarBackground(attempt + 1);
                     }, 500);
                 }
@@ -133,11 +127,9 @@
             return;
         }
 
-        fetch("https://api.lanyard.rest/v1/users/" + DISCORD_USER_ID)
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (data) {
+        fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
+            .then((res) => res.json())
+            .then((data) => {
                 if (data.success && data.data.discord_user.avatar) {
                     var id = DISCORD_USER_ID;
                     var hash = data.data.discord_user.avatar;
@@ -160,10 +152,8 @@
 
     function init() {
         fetch("/api/discord-user")
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (data) {
+            .then((res) => res.json())
+            .then((data) => {
                 if (data.userId) {
                     DISCORD_USER_ID = data.userId;
                     loadAvatar();

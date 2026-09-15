@@ -1,6 +1,4 @@
-(function () {
-    "use strict";
-
+(() => {
     var POLL_INTERVAL_MS = 5000;
     var AUTO_RELOAD_SECONDS = 12;
 
@@ -26,7 +24,7 @@
         secondsLeft = AUTO_RELOAD_SECONDS;
         countdownEl.textContent = String(secondsLeft);
         stopCountdown();
-        countdownTimer = setInterval(function () {
+        countdownTimer = setInterval(() => {
             secondsLeft -= 1;
             if (secondsLeft <= 0) {
                 reloadPage();
@@ -52,19 +50,16 @@
 
     function checkForUpdate() {
         fetch("/version.json", { cache: "no-store" })
-            .then(function (res) {
-                return res.ok ? res.json() : null;
-            })
-            .then(function (data) {
-                if (!data || !data.version || data.version === currentVersion) {
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => {
+                if (!data?.version || data.version === currentVersion) {
                     return;
                 }
                 currentVersion = data.version;
                 promptUpdate();
             })
-            .catch(function () {});
+            .catch(() => {});
     }
-
 
     function bindDialog() {
         if (!dialog) return;
@@ -72,42 +67,45 @@
         var reloadBtn = document.getElementById("update-reload");
         if (reloadBtn) reloadBtn.addEventListener("click", reloadPage);
 
-        dialog.addEventListener("cancel", function (event) {
+        dialog.addEventListener("cancel", (event) => {
             event.preventDefault();
         });
     }
 
     setInterval(checkForUpdate, POLL_INTERVAL_MS);
 
-    document.addEventListener("visibilitychange", function () {
+    document.addEventListener("visibilitychange", () => {
         if (!document.hidden) checkForUpdate();
     });
 
-    window.addEventListener("pageshow", function (event) {
+    window.addEventListener("pageshow", (event) => {
         if (event.persisted) checkForUpdate();
     });
 
     bindDialog();
     checkForUpdate();
 
-
     var bannerMeta = [
         { photo: "Fonte não identificada", url: "" },
         { photo: "Fonte não identificada", url: "" },
         { photo: "Fonte não identificada", url: "" },
-        { photo: "Fonte não identificada", url: "" }
+        { photo: "Fonte não identificada", url: "" },
     ];
     var banner = document.getElementById("photo-banner");
     if (banner) {
         var randomIndex = Math.floor(Math.random() * 4) + 1;
-        banner.classList.add("banner-" + randomIndex);
+        banner.classList.add(`banner-${randomIndex}`);
         var meta = bannerMeta[randomIndex - 1];
         var credit = document.querySelector(".photo-box .credit");
         if (credit) {
             var photoLink = meta.url
-                ? '<a href="' + meta.url + '" target="_blank" rel="noopener noreferrer">' + meta.photo + '</a>'
+                ? '<a href="' +
+                  meta.url +
+                  '" target="_blank" rel="noopener noreferrer">' +
+                  meta.photo +
+                  "</a>"
                 : meta.photo;
-            credit.innerHTML = "Foto: " + photoLink;
+            credit.innerHTML = `Foto: ${photoLink}`;
         }
     }
 })();

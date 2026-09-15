@@ -1,6 +1,4 @@
-(function () {
-    "use strict";
-
+(() => {
     var POLL_MS = 30000;
     var LOOP_MS = 8000;
 
@@ -31,12 +29,15 @@
     function emitRandom() {
         if (!danmaku || !danmakuPool.length) return;
         var item = danmakuPool[Math.floor(Math.random() * danmakuPool.length)];
-        danmaku.emit({ text: item.author + ": " + item.text, style: DANMAKU_STYLE });
+        danmaku.emit({
+            text: `${item.author}: ${item.text}`,
+            style: DANMAKU_STYLE,
+        });
     }
 
     function emitToDanmaku(author, text) {
         if (!danmaku) return;
-        danmaku.emit({ text: author + ": " + text, style: DANMAKU_STYLE });
+        danmaku.emit({ text: `${author}: ${text}`, style: DANMAKU_STYLE });
     }
 
     var DANMAKU_STYLE = {
@@ -66,7 +67,7 @@
         }
     }
 
-    function destroyDanmaku() {
+    function _destroyDanmaku() {
         if (!danmaku) return;
         try {
             if (typeof danmaku.clear === "function") danmaku.clear();
@@ -76,37 +77,51 @@
     }
 
     function fetchEntries() {
-        return fetch("/api/guestbook").then(function (res) {
-            return res.ok ? res.json() : [];
-        });
+        return fetch("/api/guestbook").then((res) =>
+            res.ok ? res.json() : [],
+        );
     }
 
     function formatShortAgo(createdAt) {
-        var secs = Math.max(0, Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000));
-        if (secs >= 86400) return Math.floor(secs / 86400) + "d";
-        if (secs >= 3600) return Math.floor(secs / 3600) + "h";
-        if (secs >= 60) return Math.floor(secs / 60) + "min";
+        var secs = Math.max(
+            0,
+            Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000),
+        );
+        if (secs >= 86400) return `${Math.floor(secs / 86400)}d`;
+        if (secs >= 3600) return `${Math.floor(secs / 3600)}h`;
+        if (secs >= 60) return `${Math.floor(secs / 60)}min`;
         return "agora";
     }
 
     function buildEntryHtml(e) {
         var time = formatShortAgo(e.createdAt);
 
-        return '<div class="gb-msg" data-id="' + esc(String(e.id)) + '">'
-            + '<div class="gb-msg-header">'
-            + '<span class="gb-msg-author">' + esc(e.authorName) + '</span>'
-            + '<span class="gb-msg-time">' + esc(time) + '</span>'
-            + "</div>"
-            + '<p class="gb-msg-text">' + esc(e.message) + "</p>"
-            + "</div>";
+        return (
+            '<div class="gb-msg" data-id="' +
+            esc(String(e.id)) +
+            '">' +
+            '<div class="gb-msg-header">' +
+            '<span class="gb-msg-author">' +
+            esc(e.authorName) +
+            "</span>" +
+            '<span class="gb-msg-time">' +
+            esc(time) +
+            "</span>" +
+            "</div>" +
+            '<p class="gb-msg-text">' +
+            esc(e.message) +
+            "</p>" +
+            "</div>"
+        );
     }
 
     function loadInitialMessages() {
         messages.innerHTML = '<p class="gb-empty">carregando…</p>';
         fetchEntries()
-            .then(function (entries) {
+            .then((entries) => {
                 if (!Array.isArray(entries) || !entries.length) {
-                    messages.innerHTML = '<p class="gb-empty">Nenhuma mensagem ainda. Seja o primeiro!</p>';
+                    messages.innerHTML =
+                        '<p class="gb-empty">Nenhuma mensagem ainda. Seja o primeiro!</p>';
                     return;
                 }
                 messages.innerHTML = "";
@@ -117,14 +132,15 @@
                 }
                 messages.scrollTop = messages.scrollHeight;
             })
-            .catch(function () {
-                messages.innerHTML = '<p class="gb-empty">Erro ao carregar.</p>';
+            .catch(() => {
+                messages.innerHTML =
+                    '<p class="gb-empty">Erro ao carregar.</p>';
             });
     }
 
     function pollNewMessages() {
         fetchEntries()
-            .then(function (entries) {
+            .then((entries) => {
                 if (!Array.isArray(entries)) return;
                 for (var i = 0; i < entries.length; i++) {
                     var e = entries[i];
@@ -134,13 +150,16 @@
                         addToPool(e.authorName, e.message);
                         emitToDanmaku(e.authorName, e.message);
                         if (dialog.open) {
-                            messages.insertAdjacentHTML("beforeend", buildEntryHtml(e));
+                            messages.insertAdjacentHTML(
+                                "beforeend",
+                                buildEntryHtml(e),
+                            );
                             messages.scrollTop = messages.scrollHeight;
                         }
                     }
                 }
             })
-            .catch(function () {});
+            .catch(() => {});
     }
 
     function startPolling() {
@@ -185,19 +204,19 @@
         closeBtn.addEventListener("click", closeDialog);
     }
 
-    dialog.addEventListener("cancel", function (evt) {
+    dialog.addEventListener("cancel", (evt) => {
         evt.preventDefault();
         closeDialog();
     });
 
-    dialog.addEventListener("close", function () {
+    dialog.addEventListener("close", () => {
         form.reset();
         var errEl = document.getElementById("gb-form-error");
         if (errEl) errEl.textContent = "";
     });
 
-    document.addEventListener("htmx:afterRequest", function (evt) {
-        if (!evt.detail || !evt.detail.xhr) return;
+    document.addEventListener("htmx:afterRequest", (evt) => {
+        if (!evt.detail?.xhr) return;
         var path = evt.detail.pathInfo ? evt.detail.pathInfo.requestPath : "";
         if (path !== "/api/guestbook") return;
 
@@ -208,7 +227,8 @@
             try {
                 var errData = JSON.parse(evt.detail.xhr.responseText);
                 var errEl = document.getElementById("gb-form-error");
-                if (errEl && errData.message) errEl.textContent = errData.message;
+                if (errEl && errData.message)
+                    errEl.textContent = errData.message;
             } catch (_) {}
             return;
         }
@@ -234,7 +254,7 @@
         messages.insertAdjacentHTML("beforeend", el.outerHTML);
         messages.scrollTop = messages.scrollHeight;
         form.reset();
-        var errEl = document.getElementById("gb-form-error");
+        errEl = document.getElementById("gb-form-error");
         if (errEl) errEl.textContent = "";
     });
 
@@ -249,32 +269,35 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", () => {
         initDanmaku();
         startLoop();
 
         var openBtn = document.querySelector('[commandfor="guestbook-dialog"]');
         if (openBtn) {
-            openBtn.addEventListener("click", function (evt) {
+            openBtn.addEventListener("click", (evt) => {
                 evt.preventDefault();
                 openDialog();
             });
         }
 
         fetchEntries()
-            .then(function (entries) {
+            .then((entries) => {
                 emitInitialAsDanmaku(entries);
                 startPolling();
             })
-            .catch(function () {
+            .catch(() => {
                 startPolling();
             });
 
-        var observer = new MutationObserver(function () {
+        var observer = new MutationObserver(() => {
             if (dialog.open) {
                 loadInitialMessages();
             }
         });
-        observer.observe(dialog, { attributes: true, attributeFilter: ["open"] });
+        observer.observe(dialog, {
+            attributes: true,
+            attributeFilter: ["open"],
+        });
     });
 })();

@@ -4,7 +4,7 @@ import { esc } from "../lib/html.js";
 
 const CACHE_TTL_MS = 9_000;
 
-let cache = {
+const cache = {
     fetchedAt: 0,
     track: null,
     durationKey: "",
@@ -70,7 +70,7 @@ async function fetchTrackDuration(artist, title) {
         const res = await fetch(url);
         if (!res.ok) return 0;
         const data = await res.json();
-        return parseInt(data?.track?.duration) || 0;
+        return parseInt(data?.track?.duration, 10) || 0;
     } catch (error) {
         console.warn("track.getInfo failed", {
             artist,
@@ -140,7 +140,7 @@ async function getCachedVideoId(trackKey) {
         const [row] = await getSql()`
             select video_id from track_video_cache where track_key = ${trackKey}
         `;
-        return row ? (row.video_id || "") : null;
+        return row ? row.video_id || "" : null;
     } catch (error) {
         console.warn("getCachedVideoId failed", { error: error.message });
         return null;
@@ -246,8 +246,16 @@ async function getNowPlaying() {
         }
 
         const [previewUrl, videoId] = await Promise.all([
-            getPreviewCached(trackKey, nowPlayingTrack.artist, nowPlayingTrack.title),
-            getVideoCached(trackKey, nowPlayingTrack.artist, nowPlayingTrack.title),
+            getPreviewCached(
+                trackKey,
+                nowPlayingTrack.artist,
+                nowPlayingTrack.title,
+            ),
+            getVideoCached(
+                trackKey,
+                nowPlayingTrack.artist,
+                nowPlayingTrack.title,
+            ),
         ]);
         nowPlayingTrack.preview = previewUrl;
         nowPlayingTrack.videoId = videoId;
@@ -275,13 +283,15 @@ function fmtClock(ms) {
 }
 
 function renderHtml(track) {
-    if (!track || !track.isPlaying) {
+    if (!track?.isPlaying) {
         return `<p class="np-empty">Rafael não está ouvindo nada no momento.</p>`;
     }
     const elapsedMs = track.elapsedMs || 0;
     const totalMs = track.duration || 0;
     const pct =
-        totalMs > 0 ? Math.min(100, Math.round((elapsedMs / totalMs) * 100)) : 0;
+        totalMs > 0
+            ? Math.min(100, Math.round((elapsedMs / totalMs) * 100))
+            : 0;
     return `
     <div class="np-track" data-track-key="${esc(track.key)}" data-url="${esc(track.trackUrl)}" data-preview="${esc(track.preview)}" data-video-id="${esc(track.videoId)}" data-duration="${totalMs}" data-elapsed="${elapsedMs}">
       <div class="np-jewel">

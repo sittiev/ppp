@@ -1,41 +1,40 @@
 import "dotenv/config";
-import { createHash } from "crypto";
-import { readdirSync, readFileSync } from "fs";
-import { Hono } from "hono";
+import { createHash } from "node:crypto";
+import { readdirSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
-import { config } from "./config.js";
-import { getNowPlaying, renderHtml } from "./api/now-playing.js";
-import { trackAndGetStats, renderHtml as renderVisitorsHtml } from "./api/visitors.js";
+import { Hono } from "hono";
 import {
+    checkRateLimit,
     getRecentEntries,
     insertEntry,
-    renderHtml as renderGuestbookHtml,
     renderEntryHtml,
+    renderHtml as renderGuestbookHtml,
     validateInput,
-    checkRateLimit,
 } from "./api/guestbook.js";
-import { esc } from "./lib/html.js";
+import { getNowPlaying, renderHtml } from "./api/now-playing.js";
+import {
+    renderHtml as renderVisitorsHtml,
+    trackAndGetStats,
+} from "./api/visitors.js";
+import { config } from "./config.js";
 import { hashClient, hashRateLimitKey } from "./lib/hash.js";
-import { getVerifiedIp, getUserAgent } from "./lib/request.js";
+import { esc } from "./lib/html.js";
+import { getUserAgent, getVerifiedIp } from "./lib/request.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, "..", "public");
 const projectRoot = join(__dirname, "..");
 const app = new Hono();
-const excludedDirs = new Set([
-    "node_modules",
-    ".git",
-    "dist",
-]);
+const excludedDirs = new Set(["node_modules", ".git", "dist"]);
 
 function computeAssetVersion(root) {
     const hash = createHash("sha1");
     const walk = (dir) => {
-        for (const entry of readdirSync(dir, { withFileTypes: true }).sort((a, b) =>
-            a.name.localeCompare(b.name),
+        for (const entry of readdirSync(dir, { withFileTypes: true }).sort(
+            (a, b) => a.name.localeCompare(b.name),
         )) {
             if (excludedDirs.has(entry.name)) continue;
             const fullPath = join(dir, entry.name);
@@ -59,17 +58,19 @@ function getAssetVersion() {
 }
 
 app.get("/version.json", (c) =>
-    c.json({ version: getAssetVersion() }, 200, { "Cache-Control": "no-store" }),
+    c.json({ version: getAssetVersion() }, 200, {
+        "Cache-Control": "no-store",
+    }),
 );
 
 app.get("/index.html", (c) => c.redirect("/"));
 
 app.get("/", (c) => {
     try {
-        const html = readFileSync(join(publicDir, "index.html"), "utf8").replaceAll(
-            "__V__",
-            getAssetVersion(),
-        );
+        const html = readFileSync(
+            join(publicDir, "index.html"),
+            "utf8",
+        ).replaceAll("__V__", getAssetVersion());
         return c.html(html, 200, { "Cache-Control": "no-store" });
     } catch (error) {
         console.error("index handler failed", { error: error.message });
@@ -145,7 +146,10 @@ app.post("/api/guestbook", async (c) => {
                     400,
                 );
             }
-            return c.json({ code: validation.code, message: validation.message }, 400);
+            return c.json(
+                { code: validation.code, message: validation.message },
+                400,
+            );
         }
 
         const verifiedIp = getVerifiedIp(c);
@@ -155,13 +159,19 @@ app.post("/api/guestbook", async (c) => {
         if (!rateLimit.allowed) {
             const retryAfter = Math.max(1, rateLimit.retryAfterSecs);
             c.header("Retry-After", String(retryAfter));
-            console.warn("guestbook rate limited", { retryAfterSecs: retryAfter });
+            console.warn("guestbook rate limited", {
+                retryAfterSecs: retryAfter,
+            });
             const msg = `Aguarde ${retryAfter}s antes de enviar outra mensagem.`;
             if (c.req.header("hx-request") === "true") {
                 return c.html(`<p class="gb-error">${msg}</p>`, 429);
             }
             return c.json(
-                { code: "RATE_LIMITED", message: msg, retry_after_seconds: retryAfter },
+                {
+                    code: "RATE_LIMITED",
+                    message: msg,
+                    retry_after_seconds: retryAfter,
+                },
                 429,
             );
         }
@@ -178,9 +188,14 @@ app.post("/api/guestbook", async (c) => {
 
         return c.json(entry);
     } catch (error) {
-        console.error("guestbook POST handler failed", { error: error.message });
+        console.error("guestbook POST handler failed", {
+            error: error.message,
+        });
         return c.json(
-            { code: "GUESTBOOK_POST_FAILED", message: "Unable to save message." },
+            {
+                code: "GUESTBOOK_POST_FAILED",
+                message: "Unable to save message.",
+            },
             500,
         );
     }

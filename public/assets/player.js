@@ -1,6 +1,4 @@
-(function () {
-    "use strict";
-
+(() => {
     var PREVIEW_LIMIT_MS = 30000;
 
     var lastPreview = "";
@@ -15,7 +13,7 @@
         var s = Math.floor(ms / 1000);
         var m = Math.floor(s / 60);
         var sec = s % 60;
-        return m + ":" + (sec < 10 ? "0" + sec : sec);
+        return `${m}:${sec < 10 ? `0${sec}` : sec}`;
     }
 
     function setText(id, value) {
@@ -26,7 +24,7 @@
     function renderBar() {
         var pct = duration > 0 ? (elapsed / duration) * 100 : 0;
         var bar = document.getElementById("np-progress-bar");
-        if (bar) bar.style.width = pct + "%";
+        if (bar) bar.style.width = `${pct}%`;
         var outer = document.getElementById("np-progress");
         if (outer) outer.setAttribute("aria-valuenow", String(Math.round(pct)));
     }
@@ -38,7 +36,7 @@
         setText("np-total", fmt(dur));
         setText("np-elapsed", fmt(elapsed));
         renderBar();
-        progressTimer = setInterval(function () {
+        progressTimer = setInterval(() => {
             elapsed += 1000;
             if (duration > 0 && elapsed >= duration) {
                 elapsed = duration;
@@ -151,8 +149,8 @@
         audio.src = preview;
         try {
             audio.currentTime = elapsedMs / 1000;
-        } catch (e) {}
-        audio.play().catch(function () {});
+        } catch (_e) {}
+        audio.play().catch(() => {});
         startProgress(dur, elapsedMs);
     }
 
@@ -171,14 +169,15 @@
 
         var preview = trackEl.dataset.preview || "";
         var videoId = trackEl.dataset.videoId || "";
-        var dur = parseInt(trackEl.dataset.duration) || 0;
-        var elapsedMs = parseInt(trackEl.dataset.elapsed) || 0;
+        var dur = parseInt(trackEl.dataset.duration, 10) || 0;
+        var elapsedMs = parseInt(trackEl.dataset.elapsed, 10) || 0;
 
         if (progressWrap) progressWrap.hidden = false;
 
         if (preview && elapsedMs < PREVIEW_LIMIT_MS) {
             updateSoundButton(true);
-            if (preview !== lastPreview) playPreview(preview, dur, elapsedMs, videoId);
+            if (preview !== lastPreview)
+                playPreview(preview, dur, elapsedMs, videoId);
             return;
         }
 
@@ -190,7 +189,8 @@
 
         if (preview) {
             updateSoundButton(true);
-            if (preview !== lastPreview) playPreview(preview, dur, elapsedMs, "");
+            if (preview !== lastPreview)
+                playPreview(preview, dur, elapsedMs, "");
             return;
         }
 
@@ -206,7 +206,7 @@
         var audio = document.getElementById("np-audio");
         var yt = document.getElementById("np-yt");
         if (audio) audio.muted = muted;
-        if (yt && yt.src && lastVideoId) {
+        if (yt?.src && lastVideoId) {
             yt.src = youtubeEmbedUrl(lastVideoId, elapsed / 1000, muted);
         }
         updateSoundButton(true);
@@ -231,7 +231,7 @@
         var location =
             window.innerWidth <= 480 ? "" : "Brasil, Rio de Janeiro · ";
         document.getElementById("clock").textContent =
-            location + date + " · " + time;
+            `${location + date} · ${time}`;
     }
 
     window.updatePlayer = updatePlayer;
@@ -239,9 +239,10 @@
 
     var npBody = document.getElementById("np-body");
     if (npBody)
-        npBody.addEventListener("htmx:beforeSwap", function (evt) {
+        npBody.addEventListener("htmx:beforeSwap", (evt) => {
             var detail = evt.detail || {};
-            if (isSameTrackResponse(detail.serverResponse)) evt.preventDefault();
+            if (isSameTrackResponse(detail.serverResponse))
+                evt.preventDefault();
         });
 
     updateClock();

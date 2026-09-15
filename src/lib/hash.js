@@ -1,4 +1,4 @@
-import { createHash } from "crypto";
+import { createHash } from "node:crypto";
 import { config } from "../config.js";
 
 export function hashClient(ip, userAgent) {

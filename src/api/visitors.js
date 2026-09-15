@@ -63,7 +63,12 @@ async function trackAndGetStats(visitor) {
     const db = getSql();
     const visitorHash = hashClient(visitor.ip, visitor.userAgent);
 
-    await upsertVisit(db, visitorHash, visitor, detectDevice(visitor.userAgent));
+    await upsertVisit(
+        db,
+        visitorHash,
+        visitor,
+        detectDevice(visitor.userAgent),
+    );
     return selectVisitStats(db);
 }
 
@@ -88,4 +93,4 @@ function renderHtml(stats) {
     return `<span class="v-stat v-online">${icon("system-users")}${esc(formatNumber(onlineNow))} vendo agora</span><span class="v-stat v-views">${icon("view-refresh")}${esc(formatNumber(totalViews))} visitas</span><span class="v-stat v-last">${icon("apps/clock")}última ${esc(formatAgo(lastVisitAt))}</span>`;
 }
 
-export { trackAndGetStats, renderHtml };
+export { renderHtml, trackAndGetStats };

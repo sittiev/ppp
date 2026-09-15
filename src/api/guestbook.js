@@ -10,7 +10,7 @@ const MAX_AUTHOR_LENGTH = 30;
 
 let schemaReady = false;
 
-let cache = { entries: null, fetchedAt: 0 };
+const cache = { entries: null, fetchedAt: 0 };
 
 async function ensureSchema() {
     if (schemaReady) return;
@@ -23,13 +23,16 @@ async function ensureSchema() {
 async function checkRateLimit(clientKey) {
     try {
         await ensureSchema();
-        const [row] = await getSql()`select * from check_guestbook_rate_limit(${clientKey}, ${RATE_LIMIT_MAX}, ${RATE_LIMIT_WINDOW_SECS})`;
+        const [row] =
+            await getSql()`select * from check_guestbook_rate_limit(${clientKey}, ${RATE_LIMIT_MAX}, ${RATE_LIMIT_WINDOW_SECS})`;
         return {
             allowed: row.allowed === true,
             retryAfterSecs: Number(row.retry_after_secs) || 0,
         };
     } catch (error) {
-        console.warn("guestbook rate limit check failed", { error: error.message });
+        console.warn("guestbook rate limit check failed", {
+            error: error.message,
+        });
         return { allowed: true, retryAfterSecs: 0 };
     }
 }
@@ -103,7 +106,11 @@ function validateInput(body) {
             : "Anônimo";
 
     if (!message) {
-        return { ok: false, code: "MESSAGE_EMPTY", message: "Escreva uma mensagem." };
+        return {
+            ok: false,
+            code: "MESSAGE_EMPTY",
+            message: "Escreva uma mensagem.",
+        };
     }
     if (message.length > MAX_MESSAGE_LENGTH) {
         return {
@@ -122,4 +129,11 @@ function validateInput(body) {
     return { ok: true, authorName, message };
 }
 
-export { getRecentEntries, insertEntry, renderHtml, renderEntryHtml, validateInput, checkRateLimit };
+export {
+    checkRateLimit,
+    getRecentEntries,
+    insertEntry,
+    renderEntryHtml,
+    renderHtml,
+    validateInput,
+};
