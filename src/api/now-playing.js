@@ -310,10 +310,8 @@ function renderHtml(track) {
           </div>
           <div class="np-times">
             <span id="np-elapsed">${fmtClock(elapsedMs)}</span>
-            <span id="np-total">${fmtClock(totalMs)}</span>
-          </div>
-          <div class="np-actions">
             <button id="np-sound" type="button" onclick="toggleNpSound()">Ativar som</button>
+            <span id="np-total">${fmtClock(totalMs)}</span>
           </div>
         </div>
       </div>
