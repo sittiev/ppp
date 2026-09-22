@@ -6,7 +6,15 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 
 ## [Unreleased]
 
-Nada por aqui ainda.
+### Changed
+
+- Fontes da interface seguem o guia do Windows 7: Segoe UI com reserva em Tahoma, Verdana e Arial.
+- A janela do Guestbook agora usa os componentes nativos do 7.css.
+- Os recados voando na tela usam a mesma fonte do resto do perfil.
+
+### Removed
+
+- A capinha do CD não balança mais sozinha; só o disco gira.
 
 ## [1.0.1] - 2026-09-16
 
