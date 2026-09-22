@@ -14,6 +14,7 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - A barrinha de rolagem do Guestbook imita a do Vista, com o grip de três frisos.
 - Nomes e horários dos recados em cinza escuro, como no Messenger da época.
 - Scrollbar do Guestbook refeita em JS pra ficar igual nos dois browsers, com teclado e leitor de tela.
+- Horário dos recados com respiro da barrinha de rolagem.
 
 ### Removed
 
