@@ -11,6 +11,9 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - Fontes da interface seguem o guia do Windows 7: Segoe UI com reserva em Tahoma, Verdana e Arial.
 - A janela do Guestbook agora usa os componentes nativos do 7.css.
 - Os recados voando na tela usam a mesma fonte do resto do perfil.
+- A barrinha de rolagem do Guestbook imita a do Vista, com o grip de três frisos.
+- Nomes e horários dos recados em cinza escuro, como no Messenger da época.
+- Scrollbar do Guestbook refeita em JS pra ficar igual nos dois browsers, com teclado e leitor de tela.
 
 ### Removed
 
