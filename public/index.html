@@ -138,7 +138,6 @@
                             title="YouTube player"
                             width="1"
                             height="1"
-                            frameborder="0"
                             allow="autoplay"
                         ></iframe>
                     </div>
@@ -150,7 +149,7 @@
                     <div class="desktop-apps">
                         <button class="desktop-app" commandfor="guestbook-dialog" command="show-modal">
                             <img src="/assets/images/apps/guestbook.png" alt="" width="48" height="48" draggable="false">
-                            <span>Say something cool</span>
+                            <span>Guestbook</span>
                         </button>
                     </div>
                 </fieldset>
@@ -236,12 +235,12 @@
                     novalidate
                 >
                     <div class="group">
-                        <label for="gb-author">Nome</label>
+                        <label for="gb-author">Nome (opcional)</label>
                         <input
                             id="gb-author"
                             type="text"
                             name="authorName"
-                            placeholder="Seu nome (opcional)"
+                            placeholder="Anonimo"
                             maxlength="30"
                             autocomplete="off"
                         >
@@ -253,7 +252,7 @@
                             name="message"
                             placeholder="Escreva algo legal…"
                             maxlength="280"
-                            rows="3"
+                            rows="2"
                             required
                         ></textarea>
                     </div>
