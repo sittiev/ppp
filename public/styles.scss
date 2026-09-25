@@ -130,7 +130,17 @@ body {
         calc(24px + env(safe-area-inset-bottom))
         calc(16px + env(safe-area-inset-left));
     font-family: var(--font-ui);
-    background: var(--surface) url("assets/images/wallpapers/wallpaper-1.jpg") center/cover fixed no-repeat;
+    background:
+        linear-gradient(
+            color-mix(in srgb, var(--window-accent) 75%, transparent),
+            color-mix(in srgb, var(--window-accent) 75%, transparent)
+        ),
+        var(--surface)
+        url("assets/images/wallpapers/wallpaper-1.jpg")
+        center/cover
+        fixed
+        no-repeat;
+    background-blend-mode: hue, normal;
 }
 
 .skip-link {
