@@ -16,9 +16,13 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - Scrollbar do Guestbook refeita em JS pra ficar igual nos dois browsers, com teclado e leitor de tela.
 - Horário dos recados com respiro da barrinha de rolagem.
 - Guestbook e aviso de atualização seguem a cor que sai do avatar.
+- Hover, foco e seleção dos botões trocam o azul pela cor do avatar.
+- Botões `default` sem a borda azul pulsante do 7.css. A pulsação agora usa a cor do avatar e só aparece no hover.
 - A janela do Windows Update agora usa a borda, a barra de título, o botão de fechar e o rodapé nativos do 7.css.
 - O papel de parede troca a matiz azul pela cor do avatar, sem perder o brilho da imagem.
 - Scrollbar do Guestbook acentua o hover e o clique com a cor do avatar.
+- Clippy flutua no canto da tela em desktops, some no mobile.
+- Clippy agora troca recados, faz animações, se reposiciona e pausa quando a aba fica em segundo plano.
 
 ### Fixed
 
