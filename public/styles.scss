@@ -355,11 +355,6 @@ fieldset {
     margin-right: -2px;
     z-index: 1;
     animation: np-spin 0.9s linear infinite;
-    transition: margin-left 0.6s ease;
-}
-
-.np-jewel:hover .np-disc {
-    margin-left: -33px;
 }
 
 .np-art {
@@ -666,7 +661,6 @@ a[role="button"]:focus-visible {
 
     .np-disc {
         animation: np-spin 0.9s linear infinite !important;
-        transition: margin-left 0.6s ease !important;
     }
 }
 
