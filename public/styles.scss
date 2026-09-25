@@ -629,6 +629,10 @@ a:focus-visible,
 }
 
 @media (max-width: 480px) {
+    .clippy-agent {
+        display: none !important;
+    }
+
     .visitors {
         right: auto;
         left: 50%;
