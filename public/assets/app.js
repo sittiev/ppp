@@ -34,16 +34,8 @@
         }, 1000);
     }
 
-    function copyWindowColor() {
-        var cardWindow = document.querySelector(".card-window");
-        if (!cardWindow) return;
-        var bg = getComputedStyle(cardWindow).getPropertyValue("--w7-w-bg");
-        if (bg) dialog.style.setProperty("--w7-w-bg", bg);
-    }
-
     function promptUpdate() {
         if (!dialog || dialog.open) return;
-        copyWindowColor();
         startCountdown();
         dialog.showModal();
     }

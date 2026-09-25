@@ -69,16 +69,14 @@
     }
 
     function applyWindowColor(vibrant) {
-        var cardWindow = document.querySelector(".card-window");
-        if (!cardWindow) return;
         if (!(vibrant.coords[1] >= MIN_SATURATION)) return;
         var aero = new Color("hsl", [
             vibrant.coords[0],
             clamp(vibrant.coords[1], 25, 60),
             clamp(vibrant.coords[2], 42, 58),
         ]);
-        cardWindow.style.setProperty(
-            "--w7-w-bg",
+        document.documentElement.style.setProperty(
+            "--window-accent",
             aero.to("srgb").toString({ format: "rgb" }),
         );
     }

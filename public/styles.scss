@@ -20,9 +20,6 @@ $cursor-pointer: "assets/images/cursors/windows vista-7 cursor/windows7_link.cur
 $cursor-active: "assets/images/cursors/windows vista-7 cursor/windows7_select.cur";
 $cursor-text: "assets/images/cursors/windows vista-7 cursor/windows7_text.cur";
 
-// Dialog shared
-$dialog-blue: #0078d4;
-
 // Guestbook palette
 $gb-author: #2b2b2b;
 $gb-time: #767676;
@@ -100,6 +97,7 @@ $jewel-360: (56px, -19px, 56px, 5px, -1px, 62px, 58px);
     --ink-muted: #{$ink-muted};
     --line: #{$line};
     --surface: #{$surface};
+    --window-accent: #969696;
 }
 
 * {
@@ -155,12 +153,17 @@ body {
 // Card Window
 // ============================================
 
+.card-window,
+#update-dialog,
+#guestbook-dialog {
+    --w7-w-bg: var(--window-accent);
+}
+
 .card-window {
     width: 100%;
     max-width: 480px;
     margin: auto;
     min-width: 0;
-    --w7-w-bg: #969696;
 }
 
 .window-body {
