@@ -15,10 +15,21 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - Nomes e horários dos recados em cinza escuro, como no Messenger da época.
 - Scrollbar do Guestbook refeita em JS pra ficar igual nos dois browsers, com teclado e leitor de tela.
 - Horário dos recados com respiro da barrinha de rolagem.
+- Guestbook e aviso de atualização seguem a cor que sai do avatar.
+- A janela do Windows Update agora usa a borda, a barra de título, o botão de fechar e o rodapé nativos do 7.css.
+- O papel de parede troca a matiz azul pela cor do avatar, sem perder o brilho da imagem.
+- Scrollbar do Guestbook acentua o hover e o clique com a cor do avatar.
+
+### Fixed
+
+- As setas da scrollbar não somem mais quando clicadas.
 
 ### Removed
 
 - A capinha do CD não balança mais sozinha; só o disco gira.
+- Escudo da barra de título do Windows Update. No lugar dele, o aviso mostra o triângulo amarelo.
+- Botão de fechar do Windows Update: a atualização precisa ser concluída.
+- Deslocamento do disco ao passar o mouse.
 
 ## [1.0.1] - 2026-09-16
 
