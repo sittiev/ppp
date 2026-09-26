@@ -16,10 +16,23 @@ import {
 } from "./api/guestbook.js";
 import { getNowPlaying, renderHtml } from "./api/now-playing.js";
 import {
+    getStreamState,
+    heartbeatSession,
+    isLiveSession,
+    joinSession,
+    matchesBroadcastKey,
+    readViewer,
+    saveAnswer,
+    saveOffer,
+    startSession,
+    stopSession,
+} from "./api/stream.js";
+import {
     renderHtml as renderVisitorsHtml,
     trackAndGetStats,
 } from "./api/visitors.js";
 import { config } from "./config.js";
+import { getSql } from "./lib/db.js";
 import { hashClient, hashRateLimitKey } from "./lib/hash.js";
 import { esc } from "./lib/html.js";
 import { getUserAgent, getVerifiedIp } from "./lib/request.js";
@@ -64,19 +77,48 @@ app.get("/version.json", (c) =>
 );
 
 app.get("/index.html", (c) => c.redirect("/"));
+app.get("/stream.html", (c) => c.redirect("/stream"));
+app.get("/broadcast.html", (c) => c.redirect("/broadcast"));
 
-app.get("/", (c) => {
+function sendHtml(c, fileName) {
     try {
-        const html = readFileSync(
-            join(publicDir, "index.html"),
-            "utf8",
-        ).replaceAll("__V__", getAssetVersion());
+        const html = readFileSync(join(publicDir, fileName), "utf8").replaceAll(
+            "__V__",
+            getAssetVersion(),
+        );
         return c.html(html, 200, { "Cache-Control": "no-store" });
     } catch (error) {
-        console.error("index handler failed", { error: error.message });
+        console.error("html handler failed", {
+            file: fileName,
+            error: error.message,
+        });
         return c.text("Página temporariamente indisponível.", 500);
     }
-});
+}
+
+async function readJson(c) {
+    try {
+        return await c.req.json();
+    } catch {
+        return {};
+    }
+}
+
+function denyWithoutKey(c) {
+    return c.json(
+        {
+            code: "BROADCAST_KEY_INVALID",
+            message: "Chave de transmissão inválida.",
+        },
+        401,
+    );
+}
+
+app.get("/", (c) => sendHtml(c, "index.html"));
+
+app.get("/stream", (c) => sendHtml(c, "stream.html"));
+
+app.get("/broadcast", (c) => sendHtml(c, "broadcast.html"));
 
 app.use("*", async (c, next) => {
     await next();
@@ -228,6 +270,227 @@ app.get("/api/visitors", async (c) => {
             {
                 code: "VISITORS_FAILED",
                 message: "Unable to track visit.",
+            },
+            500,
+        );
+    }
+});
+
+app.get("/api/stream/state", async (c) => {
+    try {
+        return c.json(await getStreamState());
+    } catch (error) {
+        console.error("stream state handler failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_STATE_FAILED",
+                message: "Não foi possível consultar a transmissão.",
+            },
+            500,
+        );
+    }
+});
+
+app.post("/api/stream/session", async (c) => {
+    if (!matchesBroadcastKey(c.req.header("x-broadcast-key"))) {
+        return denyWithoutKey(c);
+    }
+    try {
+        return c.json(await startSession(), 201);
+    } catch (error) {
+        console.error("stream session start failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_SESSION_FAILED",
+                message: "Não foi possível iniciar a transmissão.",
+            },
+            500,
+        );
+    }
+});
+
+app.get("/api/stream/session/:id", async (c) => {
+    if (!matchesBroadcastKey(c.req.header("x-broadcast-key"))) {
+        return denyWithoutKey(c);
+    }
+    try {
+        const pendingViewers = await heartbeatSession(c.req.param("id"));
+        if (!pendingViewers) {
+            return c.json(
+                {
+                    code: "STREAM_SESSION_EXPIRED",
+                    message: "A transmissão não está mais ativa.",
+                },
+                410,
+            );
+        }
+        return c.json({ pendingViewers });
+    } catch (error) {
+        console.error("stream session poll failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_SESSION_POLL_FAILED",
+                message: "Não foi possível consultar os espectadores.",
+            },
+            500,
+        );
+    }
+});
+
+app.delete("/api/stream/session/:id", async (c) => {
+    if (!matchesBroadcastKey(c.req.header("x-broadcast-key"))) {
+        return denyWithoutKey(c);
+    }
+    try {
+        await stopSession(c.req.param("id"));
+        return c.json({ stopped: true });
+    } catch (error) {
+        console.error("stream session stop failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_SESSION_STOP_FAILED",
+                message: "Não foi possível encerrar a transmissão.",
+            },
+            500,
+        );
+    }
+});
+
+app.post("/api/stream/viewers", async (c) => {
+    try {
+        const { sessionId } = await readJson(c);
+        if (typeof sessionId !== "string" || !sessionId) {
+            return c.json(
+                {
+                    code: "STREAM_SESSION_MISSING",
+                    message: "Sessão de transmissão inválida.",
+                },
+                400,
+            );
+        }
+        const joined = await joinSession(
+            sessionId,
+            hashClient(getVerifiedIp(c), getUserAgent(c)),
+        );
+        if (!joined) {
+            const stillLive = await isLiveSession(getSql(), sessionId);
+            if (stillLive) {
+                return c.json(
+                    {
+                        code: "STREAM_FULL",
+                        message:
+                            "A transmissão está lotada. Tente de novo em instantes.",
+                    },
+                    503,
+                );
+            }
+            return c.json(
+                {
+                    code: "STREAM_NOT_LIVE",
+                    message: "Não há transmissão ao vivo.",
+                },
+                404,
+            );
+        }
+        return c.json(joined, 201);
+    } catch (error) {
+        console.error("stream viewer join failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_VIEWER_JOIN_FAILED",
+                message: "Não foi possível entrar na transmissão.",
+            },
+            500,
+        );
+    }
+});
+
+app.get("/api/stream/viewers/:id", async (c) => {
+    try {
+        const viewer = await readViewer(c.req.param("id"));
+        if (!viewer) {
+            return c.json(
+                {
+                    code: "STREAM_VIEWER_NOT_FOUND",
+                    message: "Esta solicitação não existe mais.",
+                },
+                404,
+            );
+        }
+        return c.json(viewer);
+    } catch (error) {
+        console.error("stream viewer read failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_VIEWER_READ_FAILED",
+                message: "Não foi possível consultar a transmissão.",
+            },
+            500,
+        );
+    }
+});
+
+app.put("/api/stream/viewers/:id/offer", async (c) => {
+    if (!matchesBroadcastKey(c.req.header("x-broadcast-key"))) {
+        return denyWithoutKey(c);
+    }
+    try {
+        const { sdp } = await readJson(c);
+        if (typeof sdp !== "string" || !sdp) {
+            return c.json(
+                { code: "STREAM_SDP_MISSING", message: "Oferta inválida." },
+                400,
+            );
+        }
+        const saved = await saveOffer(c.req.param("id"), sdp);
+        if (!saved) {
+            return c.json(
+                {
+                    code: "STREAM_VIEWER_GONE",
+                    message: "O espectador não está mais esperando.",
+                },
+                409,
+            );
+        }
+        return c.json({ offered: true });
+    } catch (error) {
+        console.error("stream offer save failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_OFFER_FAILED",
+                message: "Não foi possível enviar a oferta.",
+            },
+            500,
+        );
+    }
+});
+
+app.put("/api/stream/viewers/:id/answer", async (c) => {
+    try {
+        const { sdp } = await readJson(c);
+        if (typeof sdp !== "string" || !sdp) {
+            return c.json(
+                { code: "STREAM_SDP_MISSING", message: "Resposta inválida." },
+                400,
+            );
+        }
+        const saved = await saveAnswer(c.req.param("id"), sdp);
+        if (!saved) {
+            return c.json(
+                {
+                    code: "STREAM_VIEWER_GONE",
+                    message: "Esta solicitação não existe mais.",
+                },
+                409,
+            );
+        }
+        return c.json({ answered: true });
+    } catch (error) {
+        console.error("stream answer save failed", { error: error.message });
+        return c.json(
+            {
+                code: "STREAM_ANSWER_FAILED",
+                message: "Não foi possível enviar a resposta.",
             },
             500,
         );

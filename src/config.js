@@ -8,6 +8,8 @@ const config = {
     discordUserId: process.env.DISCORD_USER_ID,
     databaseUrl: process.env.DATABASE_URL,
     visitorSalt: process.env.VISITOR_SALT,
+    broadcastKey: process.env.BROADCAST_KEY,
+    streamViewerCap: Number(process.env.STREAM_VIEWER_CAP) || 5,
 };
 
 if (!config.lastfmUser || !config.lastfmKey) {
@@ -31,6 +33,12 @@ if (!config.discordUserId) {
 if (!config.databaseUrl || !config.visitorSalt) {
     console.warn(
         "Aviso: DATABASE_URL ou VISITOR_SALT não definidos. /api/visitors retornará vazio.",
+    );
+}
+
+if (!config.broadcastKey) {
+    console.warn(
+        "Aviso: BROADCAST_KEY não definido. /broadcast não consegue iniciar transmissão.",
     );
 }
 
