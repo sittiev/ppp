@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        >
+        <title>Tela</title>
+        <meta name="color-scheme" content="light">
+        <meta name="referrer" content="no-referrer">
+        <meta name="app-version" content="__V__">
+        <link
+            rel="icon"
+            href="assets/images/favicon.ico?v=__V__"
+            type="image/x-icon"
+        >
+        <script>
+            document.documentElement.requestFullscreen?.().catch(() => {});
+        </script>
+        <link rel="preconnect" href="https://unpkg.com" crossorigin>
+        <link rel="preconnect" href="https://colorjs.io" crossorigin>
+        <link rel="preconnect" href="https://cdn.discordapp.com" crossorigin>
+        <link rel="stylesheet" href="https://unpkg.com/7.css">
+        <link rel="stylesheet" href="styles.css?v=__V__">
+        <script src="https://colorjs.io/dist/color.global.js" defer></script>
+    </head>
+    <body class="stream-body">
+        <div class="stream-stage" id="stream-stage">
+            <div
+                class="window active stream-window"
+                role="status"
+                aria-live="polite"
+                aria-labelledby="stream-title"
+            >
+                <div class="title-bar">
+                    <div class="title-bar-text" id="stream-title">Tela</div>
+                    <div class="title-bar-controls">
+                        <button
+                            class="is-close"
+                            id="stream-close"
+                            aria-label="Fechar"
+                        ></button>
+                    </div>
+                </div>
+                <div class="window-body has-space stream-panel">
+                    <img
+                        class="stream-emblem"
+                        src="assets/images/apps/screen-share.png?v=__V__"
+                        alt=""
+                        width="48"
+                        height="48"
+                        aria-hidden="true"
+                    >
+                    <p class="stream-headline" id="stream-headline">
+                        Procurando transmissão…
+                    </p>
+                    <p class="stream-detail" id="stream-detail"></p>
+                    <div
+                        role="progressbar"
+                        class="marquee stream-progress"
+                        id="stream-progress"
+                        hidden
+                    ></div>
+                    <p class="stream-actions" id="stream-actions" hidden>
+                        <button class="default" id="stream-retry">
+                            Tentar de novo
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <video
+            class="stream-video"
+            id="stream-video"
+            autoplay
+            playsinline
+            hidden
+        ></video>
+
+        <script src="assets/accent.js?v=__V__" defer></script>
+        <script src="assets/stream.js?v=__V__" defer></script>
+    </body>
+</html>

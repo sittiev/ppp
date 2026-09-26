@@ -113,6 +113,8 @@ $jewel-360: (56px, -19px, 56px, 5px, -1px, 62px, 58px);
     --w7-el-bd-a: color-mix(in srgb, var(--window-accent) 70%, #5f5f5f);
     --w7-link-c: color-mix(in srgb, var(--window-accent) 35%, #000);
     --w7-link-c-h: color-mix(in srgb, var(--window-accent) 50%, #000);
+    --w7-pg-bg: color-mix(in srgb, var(--window-accent) 72%, #fff);
+    --w7-w-bg: var(--window-accent);
 }
 
 * {
@@ -177,12 +179,6 @@ body {
 // ============================================
 // Card Window
 // ============================================
-
-.card-window,
-#update-dialog,
-#guestbook-dialog {
-    --w7-w-bg: var(--window-accent);
-}
 
 .card-window {
     width: 100%;
@@ -538,6 +534,22 @@ a:focus-visible,
 
 .status-bar .status-bar-field {
     @extend %ellipsis;
+}
+
+#bc-open {
+    flex-grow: 0;
+    text-align: end;
+    text-decoration: none;
+    color: var(--ink-soft);
+
+    &:hover {
+        color: var(--w7-link-c-h);
+        text-decoration: underline;
+    }
+
+    &[hidden] {
+        display: none;
+    }
 }
 
 [disabled],
@@ -1249,5 +1261,206 @@ a:focus-visible,
         .gb-messages {
             max-height: 96px;
         }
+    }
+}
+
+// ============================================
+// Screen Sharing — Visitor
+// ============================================
+
+body.stream-body {
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.stream-stage {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.stream-window {
+    width: min(420px, 100%);
+}
+
+.stream-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    padding: 18px 16px 20px;
+}
+
+.stream-emblem {
+    width: 48px;
+    height: 48px;
+    image-rendering: auto;
+    opacity: 0.9;
+}
+
+.stream-headline {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.stream-detail {
+    margin: 0;
+    min-height: 2.6em;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+}
+
+.stream-progress {
+    align-self: stretch;
+    margin: 0;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.stream-actions {
+    margin: 0;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.stream-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+// ============================================
+// Screen Sharing — Broadcaster
+// ============================================
+
+body.bc-body {
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: calc(32px + env(safe-area-inset-top));
+}
+
+.bc-window {
+    width: min(520px, 100%);
+}
+
+.bc-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bc-box {
+    @extend %fieldset-margin;
+}
+
+.bc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.bc-hint {
+    margin: 6px 0 0;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+
+    &.is-error {
+        color: #a4262c;
+        font-weight: 600;
+    }
+}
+
+.bc-empty {
+    margin: 0;
+    font-size: 0.8rem;
+    color: $gb-empty;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.bc-viewers {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.bc-viewer {
+    padding: 6px 8px;
+    border: 1px solid $gb-border-msg;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--window-accent) 8%, #fff);
+}
+
+.bc-viewer-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.78rem;
+}
+
+.bc-viewer-name {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.bc-viewer-state {
+    color: var(--ink-soft);
+}
+
+.bc-metrics {
+    margin: 4px 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2px 8px;
+    font-size: 0.7rem;
+
+    div {
+        display: flex;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    dt {
+        color: var(--ink-muted);
+        margin: 0;
+    }
+
+    dd {
+        margin: 0;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }

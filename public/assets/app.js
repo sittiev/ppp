@@ -64,6 +64,18 @@
         });
     }
 
+    var streamOpen = document.getElementById("stream-open");
+    if (streamOpen) {
+        streamOpen.addEventListener("click", () => {
+            window.open("/stream", "_blank", "noopener");
+        });
+    }
+
+    var bcOpen = document.getElementById("bc-open");
+    if (bcOpen && sessionStorage.getItem("stream.broadcastKey")) {
+        bcOpen.hidden = false;
+    }
+
     setInterval(checkForUpdate, POLL_INTERVAL_MS);
 
     document.addEventListener("visibilitychange", () => {

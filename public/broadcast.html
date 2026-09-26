@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        >
+        <title>Tela</title>
+        <meta name="color-scheme" content="light">
+        <meta name="referrer" content="no-referrer">
+        <meta name="app-version" content="__V__">
+        <link
+            rel="icon"
+            href="assets/images/favicon.ico?v=__V__"
+            type="image/x-icon"
+        >
+        <link rel="preconnect" href="https://unpkg.com" crossorigin>
+        <link rel="preconnect" href="https://colorjs.io" crossorigin>
+        <link rel="preconnect" href="https://cdn.discordapp.com" crossorigin>
+        <link rel="stylesheet" href="https://unpkg.com/7.css">
+        <link rel="stylesheet" href="styles.css?v=__V__">
+        <script src="https://colorjs.io/dist/color.global.js" defer></script>
+    </head>
+    <body class="bc-body">
+        <div
+            class="window active bc-window"
+            role="region"
+            aria-labelledby="bc-title"
+        >
+            <div class="title-bar">
+                <div class="title-bar-text" id="bc-title">Tela</div>
+                <div class="title-bar-controls">
+                    <button class="is-close" id="bc-close" aria-label="Fechar"></button>
+                </div>
+            </div>
+            <div class="window-body has-space bc-panel">
+                <fieldset class="bc-box">
+                    <legend>Chave de transmissão</legend>
+                    <div class="group">
+                        <label for="bc-key">Broadcast key</label>
+                        <input
+                            id="bc-key"
+                            type="password"
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                    </div>
+                    <p class="bc-hint" id="bc-key-hint">
+                        Fica só neste navegador.
+                    </p>
+                </fieldset>
+
+                <fieldset class="bc-box">
+                    <legend>Controle</legend>
+                    <div class="bc-actions">
+                        <button class="default" id="bc-start">
+                            Iniciar transmissão
+                        </button>
+                        <button id="bc-stop" disabled>Encerrar</button>
+                    </div>
+                    <p class="bc-hint" id="bc-hint">
+                        Escolha uma janela, não a tela inteira.
+                    </p>
+                </fieldset>
+
+                <fieldset class="bc-box">
+                    <legend>Espectadores</legend>
+                    <p class="bc-empty" id="bc-empty">
+                        Ninguém assistindo ainda.
+                    </p>
+                    <ul class="bc-viewers" id="bc-viewers"></ul>
+                </fieldset>
+            </div>
+            <div class="status-bar">
+                <p class="status-bar-field" id="bc-status">parado</p>
+            </div>
+        </div>
+
+        <script src="assets/accent.js?v=__V__" defer></script>
+        <script src="assets/broadcast.js?v=__V__" defer></script>
+    </body>
+</html>

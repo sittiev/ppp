@@ -6,6 +6,13 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 
 ## [Unreleased]
 
+### Added
+
+- Novo programa Tela: quem clica abre a tela do Rafael ao vivo, direto do computador dele, sem passar por servidor de vídeo no meio.
+- A janela avisa quando não está ninguém transmitindo e acende sozinha assim que ele começa.
+- O painel de transmissão mostra resolução, quadros por segundo, bitrate, perda e latência de cada espectador.
+- Até 5 pessoas assistindo ao mesmo tempo.
+
 ### Changed
 
 - Fontes da interface seguem o guia do Windows 7: Segoe UI com reserva em Tahoma, Verdana e Arial.

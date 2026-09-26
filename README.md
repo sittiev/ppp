@@ -2,6 +2,28 @@
 
 [Novidades](./CHANGELOG.md).
 
+## transmitir a tela
+
+O programa **Tela** mostra a tela ao vivo para quem abrir `/stream`. A
+transmissão só existe enquanto o Rafael está transmitindo — não fica gravada.
+
+Para começar:
+
+1. Abrir `https://<dominio>/broadcast` e colar a `BROADCAST_KEY`.
+2. Escolher **uma janela** no seletor (não a tela inteira, para não expor o
+   que estiver aberto).
+3. Clicar em **Iniciar transmissão**.
+
+A chave fica guardada no navegador, então nas próximas vezes basta ir direto
+em `/broadcast`. A partir daí aparece um item **transmitir** na barra de
+status da página inicial, que só aparece para quem já tem a chave neste
+navegador.
+
+Para parar, clicar em **Encerrar** (ou em "Deixar de compartilhar" na barra do
+Chrome). Fechar a aba também encerra em 20 segundos.
+
+Variáveis: `BROADCAST_KEY` (obrigatória) e `STREAM_VIEWER_CAP` (padrão 5).
+
 ## todo
 
 - [x] Métricas de visitantes com Neon/PostgreSQL: online agora, último acesso ("há x min") e views totais.
