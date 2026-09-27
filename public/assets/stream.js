@@ -62,6 +62,12 @@
                 busy: false,
                 retry: true,
             },
+            blocked: {
+                title: "Toque para assistir",
+                info: "Seu navegador segurou a reprodução automática. Um toque na tela começa.",
+                busy: false,
+                retry: true,
+            },
         }[state];
 
         headline.textContent = copy.title;
@@ -128,7 +134,10 @@
         fetch("/api/stream/viewers", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ sessionId: sessionId }),
+            body: JSON.stringify({
+                sessionId: sessionId,
+                viewport: `${window.innerWidth}x${window.innerHeight}`,
+            }),
         })
             .then((res) => {
                 if (res.status === 503) throw { state: "full" };
@@ -184,10 +193,7 @@
         pc.ontrack = (event) => {
             stopTimers();
             video.srcObject = event.streams[0];
-            video.play().catch(() => {});
-            live = true;
-            stage.hidden = true;
-            video.hidden = false;
+            showVideo();
             keepAlive();
         };
         pc.onconnectionstatechange = () => {
@@ -208,6 +214,35 @@
                 }),
             )
             .catch(() => {});
+    }
+
+    function showVideo() {
+        video.muted = true;
+        video.play().then(
+            () => {
+                live = true;
+                stage.hidden = true;
+                video.hidden = false;
+            },
+            () => {
+                live = false;
+                video.hidden = true;
+                stage.hidden = false;
+                render("blocked");
+            },
+        );
+    }
+
+    function resumeOnGesture() {
+        if (!video.srcObject || live) return;
+        video.muted = true;
+        video.play().then(
+            () => {
+                stage.hidden = true;
+                video.hidden = false;
+            },
+            () => {},
+        );
     }
 
     function keepAlive() {
@@ -247,6 +282,7 @@
     close.addEventListener("click", () => {
         window.close();
     });
+    document.addEventListener("pointerdown", resumeOnGesture);
 
     reset();
 })();

@@ -11,6 +11,7 @@ async function ensureSchema() {
     if (schemaReady) return;
     await runSqlFile("stream_sessions.sql");
     await runSqlFile("stream_viewers.sql");
+    await runSqlFile("stream_viewers_meta.sql");
     await runSqlFile("index_stream_viewers.sql");
     schemaReady = true;
 }
@@ -78,22 +79,27 @@ async function heartbeatSession(sessionId) {
     `;
     if (!updated) return null;
     const rows = await db`
-        select id, client_hash from stream_viewers
+        select id, user_agent, viewport, answer_sdp is null as pending
+        from stream_viewers
         where session_id = ${sessionId}
-          and answer_sdp is null
           and last_seen_at > now() - ${LIVE_WINDOW}::interval
         order by created_at
     `;
-    return rows.map((row) => ({ id: row.id, clientHash: row.client_hash }));
+    return rows.map((row) => ({
+        id: row.id,
+        pending: row.pending,
+        userAgent: row.user_agent,
+        viewport: row.viewport,
+    }));
 }
 
-async function joinSession(sessionId, clientHash) {
+async function joinSession(sessionId, clientHash, userAgent, viewport) {
     await ensureSchema();
     const db = getSql();
     const viewerId = randomUUID();
     const rows = await db`
-        insert into stream_viewers (id, session_id, client_hash)
-        select ${viewerId}, ${sessionId}, ${clientHash}
+        insert into stream_viewers (id, session_id, client_hash, user_agent, viewport)
+        select ${viewerId}, ${sessionId}, ${clientHash}, ${userAgent}, ${viewport}
         where exists (
             select 1 from stream_sessions
             where id = ${sessionId}

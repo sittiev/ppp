@@ -84,14 +84,27 @@
         var rows = ids.map((id) => {
             var entry = peers[id];
             var stat = metrics[id] || {};
+            var who = describeDevice(entry.userAgent);
             return (
                 '<li class="bc-viewer"><div class="bc-viewer-head">' +
-                `<span class="bc-viewer-name">espectador ${entry.number}</span>` +
+                '<span class="bc-viewer-name">' +
+                `<img class="bc-os" src="assets/images/os/${esc(who.icon)}" alt="" width="16" height="16" aria-hidden="true">` +
+                `espectador ${entry.number}</span>` +
                 '<span class="bc-viewer-state">' +
-                entry.state +
+                esc(entry.state) +
                 "</span></div>" +
+                '<p class="bc-who" title="' +
+                esc(entry.userAgent || "") +
+                '">' +
+                esc(who.browser) +
+                " no " +
+                esc(who.os) +
+                " · " +
+                esc(who.kind) +
+                (entry.viewport ? ` · tela ${esc(entry.viewport)}` : "") +
+                "</p>" +
                 '<dl class="bc-metrics">' +
-                metric("resolução", stat.resolution || "—") +
+                metric("vídeo", stat.resolution || "—") +
                 metric("fps", stat.fps === undefined ? "—" : String(stat.fps)) +
                 metric("bitrate", stat.bitrate || "—") +
                 metric("perda", stat.loss || "—") +
@@ -103,8 +116,71 @@
         list.innerHTML = rows.join("");
     }
 
+    function describeDevice(userAgent) {
+        var unknown = {
+            browser: "Navegador",
+            os: "desconhecido",
+            kind: "dispositivo",
+            icon: "generic.png",
+        };
+        if (!userAgent) return unknown;
+        var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
+        var kind = /iPad|Tablet/i.test(userAgent)
+            ? "tablet"
+            : isMobile
+              ? "celular"
+              : "computador";
+        var os = /Windows/i.test(userAgent)
+            ? "Windows"
+            : /Android/i.test(userAgent)
+              ? "Android"
+              : /iPhone|iPad|iPod|iOS/i.test(userAgent)
+                ? "iOS"
+                : /Mac OS X/i.test(userAgent)
+                  ? "macOS"
+                  : /Linux/i.test(userAgent)
+                    ? "Linux"
+                    : unknown.os;
+        var browser = /Edg\//i.test(userAgent)
+            ? "Edge"
+            : /OPR\//i.test(userAgent)
+              ? "Opera"
+              : /Brave\//i.test(userAgent)
+                ? "Brave"
+                : /Firefox\//i.test(userAgent)
+                  ? "Firefox"
+                  : /Chrome\//i.test(userAgent)
+                    ? "Chrome"
+                    : /Safari\//i.test(userAgent)
+                      ? "Safari"
+                      : unknown.browser;
+        var icon =
+            os === "Windows"
+                ? "win2-7.png"
+                : os === "macOS" || os === "iOS"
+                  ? "gnome.png"
+                  : isMobile
+                    ? "generic.png"
+                    : "debian.png";
+        return { browser: browser, os: os, kind: kind, icon: icon };
+    }
+
+    function esc(value) {
+        return String(value).replace(
+            /[&<>"']/g,
+            (char) =>
+                ({
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;",
+                })[char],
+        );
+    }
+
     function metric(label, value) {
-        return `<div><dt>${label}</dt><dd>${value}</dd></div>`;
+        return `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`;
     }
 
     async function tuneSender(node) {
@@ -139,12 +215,15 @@
         });
     }
 
-    async function offerTo(viewerId, number) {
+    async function offerTo(viewer) {
+        var viewerId = viewer.id;
         var node = new RTCPeerConnection(STUN);
         peers[viewerId] = {
             node: node,
             state: "negociando",
-            number: number,
+            number: Object.keys(peers).length + 1,
+            userAgent: viewer.userAgent,
+            viewport: viewer.viewport,
             offered: false,
             misses: 0,
         };
@@ -274,10 +353,13 @@
             })
             .then((data) => {
                 if (!data) return;
-                var waiting = data.pendingViewers;
-                waiting.forEach((viewer) => {
-                    if (peers[viewer.id]) return;
-                    offerTo(viewer.id, Object.keys(peers).length + 1);
+                data.viewers.forEach((viewer) => {
+                    if (peers[viewer.id]) {
+                        peers[viewer.id].userAgent = viewer.userAgent;
+                        peers[viewer.id].viewport = viewer.viewport;
+                        return;
+                    }
+                    if (viewer.pending) offerTo(viewer);
                 });
                 Object.keys(peers).forEach(applyAnswer);
             })

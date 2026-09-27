@@ -16,7 +16,15 @@
             type="image/x-icon"
         >
         <script>
-            document.documentElement.requestFullscreen?.().catch(() => {});
+            addEventListener(
+                "pointerdown",
+                () => {
+                    document.documentElement
+                        .requestFullscreen?.()
+                        .catch(() => {});
+                },
+                { once: true },
+            );
         </script>
         <link rel="preconnect" href="https://unpkg.com" crossorigin>
         <link rel="preconnect" href="https://colorjs.io" crossorigin>
@@ -75,6 +83,7 @@
             class="stream-video"
             id="stream-video"
             autoplay
+            muted
             playsinline
             hidden
         ></video>
