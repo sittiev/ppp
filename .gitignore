@@ -5,3 +5,6 @@ tmp/
 opencode.json
 AGENTS.md
 public/styles.css
+
+# Playwright MCP screenshots
+.playwright-mcp/

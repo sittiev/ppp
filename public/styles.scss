@@ -1024,10 +1024,10 @@ a:focus-visible,
 }
 
 // ============================================
-// Guestbook Scrollbar — Vista Aero
+// Scrollbar — Vista Aero
 // ============================================
 
-.gb-messages.has-scrollbar {
+.has-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: #c0c0c0 #efefef;
 
@@ -1120,13 +1120,13 @@ a:focus-visible,
     display: flex;
     align-items: stretch;
 
-    .gb-messages {
+    .has-scrollbar {
         flex: 1;
         min-width: 0;
     }
 }
 
-.gb-messages.has-custom-sb {
+.has-scrollbar.has-custom-sb {
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -1261,6 +1261,172 @@ a:focus-visible,
         .gb-messages {
             max-height: 96px;
         }
+    }
+}
+
+// ============================================
+// About Dialog
+// ============================================
+
+#about-dialog {
+    width: min(460px, calc(100vw - 24px));
+    padding: 0;
+    --vsb-tint: color-mix(in srgb, var(--window-accent) 22%, #fff);
+    --vsb-tint-active: color-mix(in srgb, var(--window-accent) 38%, #fff);
+
+    &::backdrop {
+        @include dialog-backdrop(0.45, 10px);
+    }
+
+    &[open] {
+        animation: updateDialogIn 0.2s ease;
+    }
+}
+
+.about-body {
+    padding: 10px 12px 12px;
+}
+
+.about-scroll {
+    max-height: min(58vh, 420px);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    padding-right: 6px;
+}
+
+.about-lead {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--ink-mid);
+}
+
+.about-block {
+    margin: 0 0 4px;
+
+    legend {
+        font-size: 0.75rem;
+    }
+}
+
+.about-text {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+}
+
+.about-loading {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+}
+
+.about-build {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    img {
+        flex: none;
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.about-facts {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    > div {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+    }
+
+    dt {
+        flex: none;
+        font-size: 0.78rem;
+        color: var(--ink-muted);
+    }
+
+    dd {
+        margin: 0;
+        font-size: 0.78rem;
+        color: var(--ink);
+    }
+
+    code {
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.76rem;
+        padding: 1px 4px;
+        background: #efefef;
+        border: 1px solid #c6c6c6;
+    }
+}
+
+.about-author {
+    display: flow-root;
+}
+
+.about-author img {
+    float: left;
+    width: 28px;
+    height: 28px;
+    margin: 2px 8px 4px 0;
+}
+
+.about-tips,
+.about-links {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+
+    li {
+        display: list-item flow-root;
+        margin-bottom: 4px;
+    }
+}
+
+.about-tips img {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin: 1px 6px 0 0;
+}
+
+.about-steps {
+    margin: 4px 0 0;
+    padding-left: 20px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+
+    li {
+        margin-bottom: 3px;
+    }
+}
+
+.about-badge {
+    margin: 8px 0 0;
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    text-align: center;
+}
+
+@media (max-width: 400px) {
+    #about-dialog {
+        width: calc(100vw - 16px);
+    }
+
+    .about-scroll {
+        max-height: 52vh;
     }
 }
 
@@ -1429,12 +1595,31 @@ body.bc-body {
 }
 
 .bc-viewer-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     font-weight: 600;
     color: var(--ink);
 }
 
+.bc-os {
+    width: 16px;
+    height: 16px;
+    image-rendering: auto;
+}
+
 .bc-viewer-state {
     color: var(--ink-soft);
+}
+
+.bc-who {
+    margin: 3px 0 0;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: help;
 }
 
 .bc-metrics {

@@ -179,4 +179,5 @@
 
     window.initVistaScrollbar = initVistaScrollbar;
     initVistaScrollbar(document.getElementById("gb-messages"));
+    initVistaScrollbar(document.getElementById("about-scroll"));
 })();

@@ -147,6 +147,10 @@
                 <fieldset class="apps-box">
                     <legend>Programas</legend>
                     <div class="desktop-apps">
+                        <button class="desktop-app" commandfor="about-dialog" command="show-modal">
+                            <img src="/assets/images/apps/about.png?v=__V__" alt="" width="48" height="48" draggable="false">
+                            <span>Sobre</span>
+                        </button>
                         <button class="desktop-app" commandfor="guestbook-dialog" command="show-modal">
                             <img src="/assets/images/apps/guestbook.png" alt="" width="48" height="48" draggable="false">
                             <span>Guestbook</span>
@@ -260,6 +264,160 @@
                         <button type="submit" id="gb-submit-btn" class="default">Enviar</button>
                     </div>
                 </form>
+            </div>
+        </dialog>
+
+        <dialog
+            id="about-dialog"
+            class="window active"
+            aria-labelledby="about-dialog-title"
+        >
+            <div class="title-bar">
+                <div class="title-bar-text" id="about-dialog-title">Sobre</div>
+                <div class="title-bar-controls">
+                    <button
+                        class="is-close"
+                        aria-label="Fechar"
+                        onclick="document.getElementById('about-dialog').close()"
+                    ></button>
+                </div>
+            </div>
+            <div class="window-body has-space about-body">
+                <div class="about-scroll has-scrollbar" id="about-scroll">
+                    <p class="about-lead">
+                        Este site está em constante desenvolvimento e pode receber
+                        novas funcionalidades a qualquer momento.
+                    </p>
+
+                    <fieldset class="about-block">
+                        <legend>Build</legend>
+                        <div class="about-build">
+                            <img
+                                src="assets/images/apps/sysinfo.png"
+                                alt=""
+                                aria-hidden="true"
+                                width="32"
+                                height="32"
+                            >
+                            <div
+                                id="about-facts"
+                                hx-get="/api/about"
+                                hx-trigger="load"
+                                hx-swap="innerHTML"
+                            >
+                                <p class="about-loading">lendo…</p>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="about-block">
+                        <legend>Seus dados</legend>
+                        <p class="about-text">
+                            Nenhum dado do seu computador é obtido, entregue ou compartilhado
+                            com ninguém. Não tem propaganda, não tem analytics de terceiros e não tem cookies de rastreamento. O
+                            contador de visitas guarda o seu IP e o seu
+                            navegador misturados com uma criptografia e transformados num
+                            código irreversível. Dá pra contar visitas sem
+                            saber de quem são. E o código que faz isso está
+                            todo aberto no
+                            <a
+                                href="https://github.com/sittiev/ppp"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >repositório</a>, para você conferir.
+                        </p>
+                    </fieldset>
+
+                    <fieldset class="about-block">
+                        <legend>O autor</legend>
+                        <p class="about-text about-author">
+                            <img
+                                src="assets/images/os/arch.png"
+                                alt="Logo do Arch Linux"
+                                width="28"
+                                height="28"
+                            >
+                            O criador deste lindo site usa
+                            <a
+                                href="https://archlinux.org"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >Arch</a>, a propósito.
+                        </p>
+                    </fieldset>
+
+                    <fieldset class="about-block">
+                        <legend>Para ver do jeito certo</legend>
+                        <ul class="about-tips">
+                            <li>
+                                É recomendado ver este site num desktop. No
+                                celular abre tudo, mas a moldura foi desenhada
+                                para uma janela grande.
+                            </li>
+                            <li>
+                                É recomendado ativar as animações. Se o seu
+                                sistema pedir para reduzir movimento, a página
+                                obedece e fica sem graça.
+                            </li>
+                            <li>
+                                É recomendado desativar o adblock. Ele pode
+                                barrar o HTMX, o Last.fm ou o Deezer, e aí o
+                                “Tocando agora” simplesmente não carrega.
+                            </li>
+                            <li>
+                                <img
+                                    src="assets/images/apps/web-browser.png"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="20"
+                                    height="20"
+                                >
+                                Funciona melhor em Chrome ou Firefox, os dois
+                                navegadores testados aqui de verdade. Edge e
+                                Safari devem abrir, mas ninguém mediu.
+                            </li>
+                            <li>
+                                Se você usa Dark Reader ou o modo noturno do
+                                sistema, considere desligar. Eles invertem as
+                                cores por cima do Aero e o resultado é um borrão
+                                cinza sem forma.
+                            </li>
+                        </ul>
+                    </fieldset>
+
+                    <fieldset class="about-block">
+                        <legend>Achei um bug</legend>
+                        <p class="about-text">
+                            Se algo te incomodou ou quebrou, conta lá, mesmo
+                            que você não saiba explicar direito:
+                        </p>
+                        <ol class="about-steps">
+                            <li>
+                                Abre a aba
+                                <a
+                                    href="https://github.com/sittiev/ppp/issues"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >Issues</a>
+                                do repositório.
+                            </li>
+                            <li>
+                                Clica em <strong>New issue</strong> e escreve o
+                                que você tentou fazer, em uma frase.
+                            </li>
+                            <li>
+                                Se a página fez alguma coisa estranha, manda o
+                                que apareceu na tela. Print vale mais que
+                                descrição.
+                            </li>
+                            <li>
+                                Escreve do jeito que você falaria,  até porque um relato
+                                torto vale mais do que um bug
+                                que ninguém contou.
+                            </li>
+                        </ol>
+                    </fieldset>
+                </div>
             </div>
         </dialog>
 

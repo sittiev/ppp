@@ -1,11 +1,11 @@
 import "dotenv/config";
-import { createHash } from "node:crypto";
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
+import { getAboutInfo, renderHtml as renderAboutHtml } from "./api/about.js";
 import {
     checkRateLimit,
     getRecentEntries,
@@ -32,6 +32,7 @@ import {
     trackAndGetStats,
 } from "./api/visitors.js";
 import { config } from "./config.js";
+import { getBuildInfo } from "./lib/build.js";
 import { getSql } from "./lib/db.js";
 import { hashClient, hashRateLimitKey } from "./lib/hash.js";
 import { esc } from "./lib/html.js";
@@ -39,39 +40,10 @@ import { getUserAgent, getVerifiedIp } from "./lib/request.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, "..", "public");
-const projectRoot = join(__dirname, "..");
 const app = new Hono();
-const excludedDirs = new Set(["node_modules", ".git", "dist"]);
-
-function computeAssetVersion(root) {
-    const hash = createHash("sha1");
-    const walk = (dir) => {
-        for (const entry of readdirSync(dir, { withFileTypes: true }).sort(
-            (a, b) => a.name.localeCompare(b.name),
-        )) {
-            if (excludedDirs.has(entry.name)) continue;
-            const fullPath = join(dir, entry.name);
-            if (entry.isDirectory()) walk(fullPath);
-            else {
-                hash.update(fullPath.slice(root.length));
-                hash.update(readFileSync(fullPath));
-            }
-        }
-    };
-    walk(root);
-    return hash.digest("hex").slice(0, 8);
-}
-
-function getAssetVersion() {
-    try {
-        return computeAssetVersion(projectRoot);
-    } catch {
-        return "unknown";
-    }
-}
 
 app.get("/version.json", (c) =>
-    c.json({ version: getAssetVersion() }, 200, {
+    c.json({ version: getBuildInfo().version }, 200, {
         "Cache-Control": "no-store",
     }),
 );
@@ -84,7 +56,7 @@ function sendHtml(c, fileName) {
     try {
         const html = readFileSync(join(publicDir, fileName), "utf8").replaceAll(
             "__V__",
-            getAssetVersion(),
+            getBuildInfo().version,
         );
         return c.html(html, 200, { "Cache-Control": "no-store" });
     } catch (error) {
@@ -243,6 +215,16 @@ app.post("/api/guestbook", async (c) => {
     }
 });
 
+app.get("/api/about", (c) => {
+    const info = getAboutInfo();
+
+    if (c.req.header("hx-request") === "true") {
+        return c.html(renderAboutHtml(info));
+    }
+
+    return c.json(info);
+});
+
 app.get("/api/visitors", async (c) => {
     try {
         let city = c.req.header("x-vercel-ip-city") || "";
@@ -314,8 +296,8 @@ app.get("/api/stream/session/:id", async (c) => {
         return denyWithoutKey(c);
     }
     try {
-        const pendingViewers = await heartbeatSession(c.req.param("id"));
-        if (!pendingViewers) {
+        const viewers = await heartbeatSession(c.req.param("id"));
+        if (!viewers) {
             return c.json(
                 {
                     code: "STREAM_SESSION_EXPIRED",
@@ -324,7 +306,7 @@ app.get("/api/stream/session/:id", async (c) => {
                 410,
             );
         }
-        return c.json({ pendingViewers });
+        return c.json({ viewers });
     } catch (error) {
         console.error("stream session poll failed", { error: error.message });
         return c.json(
@@ -358,7 +340,11 @@ app.delete("/api/stream/session/:id", async (c) => {
 
 app.post("/api/stream/viewers", async (c) => {
     try {
-        const { sessionId } = await readJson(c);
+        const { sessionId, viewport } = await readJson(c);
+        const viewportSize =
+            typeof viewport === "string" && /^\d{1,5}x\d{1,5}$/.test(viewport)
+                ? viewport
+                : null;
         if (typeof sessionId !== "string" || !sessionId) {
             return c.json(
                 {
@@ -371,6 +357,8 @@ app.post("/api/stream/viewers", async (c) => {
         const joined = await joinSession(
             sessionId,
             hashClient(getVerifiedIp(c), getUserAgent(c)),
+            getUserAgent(c),
+            viewportSize,
         );
         if (!joined) {
             const stillLive = await isLiveSession(getSql(), sessionId);

@@ -6,11 +6,22 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 
 ## [Unreleased]
 
+### Changed
+
+- O ícone do programa Tela é o do protetor de tela do GNOME.
+
 ### Added
 
+- Novo programa Sobre, agora o primeiro da lista. Abre uma janela com a data da última atualização, a do primeiro dia do site e a versão do build.
+- A janela avisa que o site está em constante desenvolvimento e pode ganhar funcionalidade nova a qualquer momento.
+- Explica o que acontece com os seus dados: nada é obtido nem compartilhado, e o contador de visitas guarda um código irreversível em vez do IP.
+- Conta que o autor usa Arch, com o logo do Arch ao lado.
+- Avisos de leitura: ver num desktop, animações ligadas, adblock desligado, Chrome ou Firefox, e Dark Reader ou modo noturno desligados.
+- Passo a passo para reportar bug na aba Issues do repositório, escrito para quem nunca abriu o GitHub.
 - Novo programa Tela: quem clica abre a tela do Rafael ao vivo, direto do computador dele, sem passar por servidor de vídeo no meio.
 - A janela avisa quando não está ninguém transmitindo e acende sozinha assim que ele começa.
 - O painel de transmissão mostra resolução, quadros por segundo, bitrate, perda e latência de cada espectador.
+- O painel também diz de onde cada espectador está assistindo: navegador, sistema, se é celular ou computador, e o tamanho da janela, com o ícone do sistema. O detalhe técnico completo fica no hover.
 - Até 5 pessoas assistindo ao mesmo tempo.
 
 ### Changed
@@ -21,6 +32,7 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - A barrinha de rolagem do Guestbook imita a do Vista, com o grip de três frisos.
 - Nomes e horários dos recados em cinza escuro, como no Messenger da época.
 - Scrollbar do Guestbook refeita em JS pra ficar igual nos dois browsers, com teclado e leitor de tela.
+- A janela do Sobre tem a mesma barrinha de rolagem do Guestbook, com o grip de três frisos.
 - Horário dos recados com respiro da barrinha de rolagem.
 - Guestbook e aviso de atualização seguem a cor que sai do avatar.
 - Hover, foco e seleção dos botões trocam o azul pela cor do avatar.
@@ -33,6 +45,9 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 
 ### Fixed
 
+- A tela do programa Tela não fica mais preta no Brave e em outros navegadores mais rigorosos com vídeo automático. A imagem começa sozinha; se o navegador insistir em segurar, um toque na tela começa.
+- O tamanho da janela que o espectador manda para o painel é conferido antes de guardar.
+- O programa Tela entra em tela cheia no primeiro clique, em vez de pedir isso e falhar no console.
 - As setas da scrollbar não somem mais quando clicadas.
 
 ### Removed
