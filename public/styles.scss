@@ -1305,7 +1305,15 @@ a:focus-visible,
     margin: 0 0 4px;
 
     legend {
+        display: flex;
+        align-items: center;
+        gap: 5px;
         font-size: 0.75rem;
+
+        img {
+            width: 16px;
+            height: 16px;
+        }
     }
 }
 
@@ -1322,22 +1330,8 @@ a:focus-visible,
     color: var(--ink-muted);
 }
 
-.about-build {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-
-    img {
-        flex: none;
-        width: 32px;
-        height: 32px;
-    }
-}
-
 .about-facts {
     margin: 0;
-    flex: 1;
-    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -1369,36 +1363,31 @@ a:focus-visible,
     }
 }
 
-.about-author {
-    display: flow-root;
-}
-
-.about-author img {
-    float: left;
-    width: 28px;
-    height: 28px;
-    margin: 2px 8px 4px 0;
-}
-
-.about-tips,
-.about-links {
+.about-tips {
     margin: 0;
-    padding-left: 18px;
+    padding: 0;
+    list-style: none;
     font-size: 0.8rem;
-    line-height: 1.5;
+    line-height: 1.45;
     color: var(--ink-soft);
 
     li {
-        display: list-item flow-root;
-        margin-bottom: 4px;
+        display: flow-root;
+        margin-bottom: 7px;
+        padding-left: 24px;
     }
-}
 
-.about-tips img {
-    float: left;
-    width: 20px;
-    height: 20px;
-    margin: 1px 6px 0 0;
+    img {
+        float: left;
+        width: 18px;
+        height: 18px;
+        margin: 1px 0 0 -24px;
+    }
+
+    b {
+        color: var(--ink);
+        font-weight: 600;
+    }
 }
 
 .about-steps {
@@ -1413,11 +1402,16 @@ a:focus-visible,
     }
 }
 
-.about-badge {
-    margin: 8px 0 0;
-    font-size: 0.7rem;
-    color: var(--ink-muted);
-    text-align: center;
+.about-cta-row {
+    margin: 8px 0 2px;
+    text-align: right;
+
+    a {
+        display: inline-block;
+        min-width: 0;
+        padding: 3px 12px;
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 400px) {

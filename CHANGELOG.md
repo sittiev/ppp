@@ -9,6 +9,11 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 ### Changed
 
 - O ícone do programa Tela é o do protetor de tela do GNOME.
+- Cada bloco da janela Sobre tem um ícone próprio, e cada dica tem o seu, para dar pra achar a parte que interessa de relance.
+- As dicas viraram rótulo em negrito mais o motivo, em vez de cinco frases que começavam igual.
+- O bloco dos seus dados foi dividido em duas partes, e a do autor encolheu para uma linha.
+- O link de reportar bug virou botão no fim do bloco, em vez de sumir no meio de uma frase.
+- Botões que são link agora pulsam na cor do avatar, igual aos botões de verdade. O de reportar bug estava com o azul padrão do 7.css.
 
 ### Added
 

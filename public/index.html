@@ -290,53 +290,64 @@
                     </p>
 
                     <fieldset class="about-block">
-                        <legend>Build</legend>
-                        <div class="about-build">
+                        <legend>
                             <img
                                 src="assets/images/apps/sysinfo.png"
                                 alt=""
                                 aria-hidden="true"
-                                width="32"
-                                height="32"
-                            >
-                            <div
-                                id="about-facts"
-                                hx-get="/api/about"
-                                hx-trigger="load"
-                                hx-swap="innerHTML"
-                            >
-                                <p class="about-loading">lendo…</p>
-                            </div>
+                                width="16"
+                                height="16"
+                            >Build
+                        </legend>
+                        <div
+                            id="about-facts"
+                            hx-get="/api/about"
+                            hx-trigger="load"
+                            hx-swap="innerHTML"
+                        >
+                            <p class="about-loading">lendo…</p>
                         </div>
                     </fieldset>
 
                     <fieldset class="about-block">
-                        <legend>Seus dados</legend>
+                        <legend>
+                            <img
+                                src="assets/images/apps/privacy.png"
+                                alt=""
+                                aria-hidden="true"
+                                width="16"
+                                height="16"
+                            >Seus dados
+                        </legend>
                         <p class="about-text">
-                            Nenhum dado do seu computador é obtido, entregue ou compartilhado
-                            com ninguém. Não tem propaganda, não tem analytics de terceiros e não tem cookies de rastreamento. O
-                            contador de visitas guarda o seu IP e o seu
-                            navegador misturados com uma criptografia e transformados num
-                            código irreversível. Dá pra contar visitas sem
-                            saber de quem são. E o código que faz isso está
-                            todo aberto no
+                            Nenhum dado do seu computador é obtido, entregue ou
+                            compartilhado. Sem propaganda, sem analytics de
+                            terceiros, sem cookies de rastreamento.
+                        </p>
+                        <p class="about-text">
+                            O contador de visitas junta o seu IP e o seu navegador,
+                            passa por uma criptografia e guarda só o código que
+                            sobra. Dá pra contar visita sem saber de quem é. Está
+                            tudo aberto no
                             <a
                                 href="https://github.com/sittiev/ppp"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                            >repositório</a>, para você conferir.
+                            >repositório</a>.
                         </p>
                     </fieldset>
 
                     <fieldset class="about-block">
-                        <legend>O autor</legend>
-                        <p class="about-text about-author">
+                        <legend>
                             <img
                                 src="assets/images/os/arch.png"
-                                alt="Logo do Arch Linux"
-                                width="28"
-                                height="28"
-                            >
+                                alt=""
+                                aria-hidden="true"
+                                width="16"
+                                height="16"
+                            >O autor
+                        </legend>
+                        <p class="about-text">
                             O criador deste lindo site usa
                             <a
                                 href="https://archlinux.org"
@@ -347,46 +358,76 @@
                     </fieldset>
 
                     <fieldset class="about-block">
-                        <legend>Para ver do jeito certo</legend>
+                        <legend>Dicas</legend>
                         <ul class="about-tips">
                             <li>
-                                É recomendado ver este site num desktop. No
-                                celular abre tudo, mas a moldura foi desenhada
-                                para uma janela grande.
+                                <img
+                                    src="assets/images/apps/desktop.png"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="18"
+                                    height="18"
+                                ><b>Desktop.</b>
+                                No celular abre tudo, mas a moldura foi desenhada
+                                para janela grande.
                             </li>
                             <li>
-                                É recomendado ativar as animações. Se o seu
-                                sistema pedir para reduzir movimento, a página
+                                <img
+                                    src="assets/images/apps/animations.png"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="18"
+                                    height="18"
+                                ><b>Animações ligadas.</b>
+                                Se o sistema pedir menos movimento, a página
                                 obedece e fica sem graça.
                             </li>
                             <li>
-                                É recomendado desativar o adblock. Ele pode
-                                barrar o HTMX, o Last.fm ou o Deezer, e aí o
-                                “Tocando agora” simplesmente não carrega.
+                                <img
+                                    src="assets/images/apps/adblock.png"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="18"
+                                    height="18"
+                                ><b>Adblock desligado.</b>
+                                Pode barrar o HTMX, o Last.fm ou o Deezer, e aí o
+                                “Tocando agora” não carrega.
                             </li>
                             <li>
                                 <img
                                     src="assets/images/apps/web-browser.png"
                                     alt=""
                                     aria-hidden="true"
-                                    width="20"
-                                    height="20"
-                                >
-                                Funciona melhor em Chrome ou Firefox, os dois
-                                navegadores testados aqui de verdade. Edge e
+                                    width="18"
+                                    height="18"
+                                ><b>Chrome ou Firefox.</b>
+                                Os dois foram testados aqui de verdade. Edge e
                                 Safari devem abrir, mas ninguém mediu.
                             </li>
                             <li>
-                                Se você usa Dark Reader ou o modo noturno do
-                                sistema, considere desligar. Eles invertem as
-                                cores por cima do Aero e o resultado é um borrão
-                                cinza sem forma.
+                                <img
+                                    src="assets/images/apps/theme.png"
+                                    alt=""
+                                    aria-hidden="true"
+                                    width="18"
+                                    height="18"
+                                ><b>Dark Reader desligado.</b>
+                                Ele inverte as cores por cima do Aero e o
+                                resultado é um borrão cinza sem forma.
                             </li>
                         </ul>
                     </fieldset>
 
                     <fieldset class="about-block">
-                        <legend>Achei um bug</legend>
+                        <legend>
+                            <img
+                                src="assets/images/apps/bug.png"
+                                alt=""
+                                aria-hidden="true"
+                                width="16"
+                                height="16"
+                            >Achei um bug
+                        </legend>
                         <p class="about-text">
                             Se algo te incomodou ou quebrou, conta lá, mesmo
                             que você não saiba explicar direito:
@@ -411,11 +452,20 @@
                                 descrição.
                             </li>
                             <li>
-                                Escreve do jeito que você falaria,  até porque um relato
-                                torto vale mais do que um bug
-                                que ninguém contou.
+                                Escreve do jeito que você falaria, até porque um
+                                relato torto vale mais do que um bug que ninguém
+                                contou.
                             </li>
                         </ol>
+                        <p class="about-cta-row">
+                            <a
+                                role="button"
+                                class="default"
+                                href="https://github.com/sittiev/ppp/issues"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >Reportar bug</a>
+                        </p>
                     </fieldset>
                 </div>
             </div>
