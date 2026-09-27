@@ -480,32 +480,39 @@ a:focus,
     animation: none;
 }
 
-button.default {
+button.default,
+[role="button"].default {
     animation: none;
     background-image: var(--w7-el-grad);
     border-color: var(--w7-el-bd);
 }
 
-button.default::before {
+button.default::before,
+[role="button"].default::before {
     box-shadow: none;
 }
 
-button.default:hover {
+button.default:hover,
+[role="button"].default:hover {
     background-image: var(--w7-el-grad-h);
     border-color: var(--w7-el-bd-h);
 }
 
-button.default:hover::before {
+button.default:hover::before,
+[role="button"].default:hover::before {
     animation: accent-pulse 1s ease infinite alternate;
 }
 
-button.default:active {
+button.default:active,
+[role="button"].default:active {
     background-image: var(--w7-el-grad-a);
     border-color: var(--w7-el-bd-a);
 }
 
 button.default:focus,
-button.default:focus-visible {
+button.default:focus-visible,
+[role="button"].default:focus,
+[role="button"].default:focus-visible {
     animation: none;
     background-image: var(--w7-el-grad);
     border-color: var(--w7-el-bd);
