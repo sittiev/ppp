@@ -538,17 +538,35 @@
             return;
         }
         say("Escolha o que compartilhar…");
+        quality =
+            QUALITY_PRESETS[qualitySelect?.value] || QUALITY_PRESETS.padrao;
+        var wantsAudio = audioCheck.checked;
         navigator.mediaDevices
             .getDisplayMedia({
-                video: {
-                    width: { ideal: MAX_WIDTH },
-                    height: { ideal: MAX_HEIGHT },
-                    frameRate: { ideal: MAX_FRAMERATE },
-                },
-                audio: false,
+                video: wantsAudio
+                    ? {
+                          displaySurface: "monitor",
+                          width: { ideal: quality.width },
+                          height: { ideal: quality.height },
+                          frameRate: { ideal: quality.framerate },
+                      }
+                    : {
+                          width: { ideal: quality.width },
+                          height: { ideal: quality.height },
+                          frameRate: { ideal: quality.framerate },
+                      },
+                audio: wantsAudio ? SYSTEM_AUDIO : false,
+                systemAudio: wantsAudio ? "include" : "exclude",
             })
             .then((captured) => {
                 stream = captured;
+                var systemTrack = adoptSystemAudio(captured);
+                sayAudio(
+                    systemTrack
+                        ? `Capturando ${systemTrack.label}.`
+                        : "O seletor não devolveu áudio do sistema. O vídeo segue sem som.",
+                    !systemTrack,
+                );
                 return prepareTrack();
             })
             .then(openSession)
@@ -570,8 +588,8 @@
         };
         return track
             .applyConstraints({
-                width: { max: MAX_WIDTH },
-                height: { max: MAX_HEIGHT },
+                width: { max: quality.width },
+                height: { max: quality.height },
             })
             .catch(() => {});
     }
@@ -594,6 +612,7 @@
                 startBtn.disabled = true;
                 stopBtn.disabled = false;
                 keyInput.disabled = true;
+                if (qualitySelect) qualitySelect.disabled = true;
                 report("transmitindo, sem espectadores");
                 say("No ar. Quem abrir o programa já vê.");
                 stopTimers();
@@ -623,6 +642,7 @@
         startBtn.disabled = false;
         stopBtn.disabled = true;
         keyInput.disabled = false;
+        if (qualitySelect) qualitySelect.disabled = false;
         renderViewers();
         report("parado");
         say(reason);

@@ -51,6 +51,9 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 
 ### Fixed
 
+- A imagem da transmissão sai em 1080p e mais nítida, com teto de bitrate de 8 Mbps.
+- Dá para escolher a qualidade ao iniciar a transmissão: leve (720p · 15fps), padrão (720p · 30fps) ou alta (1080p · 30fps).
+- A transmissão agora conecta atrás de NAT restrito e firewall (caso comum no Windows): o servidor indica um relay TURN e o vídeo passa por ele quando a conexão direta é impossível.
 - A tela do programa Tela não fica mais preta no Brave e em outros navegadores mais rigorosos com vídeo automático. A imagem começa sozinha; se o navegador insistir em segurar, um toque na tela começa.
 - O tamanho da janela que o espectador manda para o painel é conferido antes de guardar.
 - O programa Tela entra em tela cheia no primeiro clique, em vez de pedir isso e falhar no console.
