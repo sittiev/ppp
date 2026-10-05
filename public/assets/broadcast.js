@@ -1,12 +1,35 @@
 (() => {
     var POLL_MS = 700;
     var METRICS_MS = 1000;
-    var MAX_WIDTH = 1280;
-    var MAX_HEIGHT = 720;
-    var MAX_FRAMERATE = 30;
-    var MAX_BITRATE = 2500000;
+    var QUALITY_PRESETS = {
+        leve: { width: 1280, height: 720, framerate: 15, bitrate: 2500000 },
+        padrao: { width: 1280, height: 720, framerate: 30, bitrate: 5000000 },
+        alta: { width: 1920, height: 1080, framerate: 30, bitrate: 8000000 },
+    };
+    var MAX_AUDIO_BITRATE = 128000;
     var KEY_STORAGE = "stream.broadcastKey";
-    var STUN = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+    var SYSTEM_AUDIO = {
+        suppressLocalAudioPlayback: false,
+        channelCount: 2,
+        noiseSuppression: false,
+        autoGainControl: false,
+        echoCancellation: false,
+    };
+    var FALLBACK_ICE = {
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    };
+    var iceCache = null;
+
+    function getIce() {
+        if (iceCache) return Promise.resolve(iceCache);
+        return fetch("/api/stream/ice", { cache: "no-store" })
+            .then((res) => (res.ok ? res.json() : null))
+            .then(
+                (data) =>
+                    (iceCache = data?.iceServers?.length ? data : FALLBACK_ICE),
+            )
+            .catch(() => FALLBACK_ICE);
+    }
 
     var keyInput = document.getElementById("bc-key");
     var keyHint = document.getElementById("bc-key-hint");
@@ -268,7 +291,7 @@
 
     async function offerTo(viewer) {
         var viewerId = viewer.id;
-        var node = new RTCPeerConnection(STUN);
+        var node = new RTCPeerConnection(await getIce());
         peers[viewerId] = {
             node: node,
             state: "negociando",

@@ -3,7 +3,21 @@
     var HANDSHAKE_POLL_MS = 700;
     var HANDSHAKE_DEADLINE_MS = 20000;
     var HEARTBEAT_POLL_MS = 5000;
-    var STUN = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+    var FALLBACK_ICE = {
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    };
+    var iceCache = null;
+
+    function getIce() {
+        if (iceCache) return Promise.resolve(iceCache);
+        return fetch("/api/stream/ice", { cache: "no-store" })
+            .then((res) => (res.ok ? res.json() : null))
+            .then(
+                (data) =>
+                    (iceCache = data?.iceServers?.length ? data : FALLBACK_ICE),
+            )
+            .catch(() => FALLBACK_ICE);
+    }
 
     var stage = document.getElementById("stream-stage");
     var video = document.getElementById("stream-video");
@@ -219,31 +233,33 @@
     }
 
     function answerOffer(offerSdp) {
-        pc = new RTCPeerConnection(STUN);
-        pc.ontrack = (event) => {
-            stopTimers();
-            video.srcObject = event.streams[0];
-            showVideo();
-            keepAlive();
-        };
-        pc.onconnectionstatechange = () => {
-            if (pc?.connectionState !== "failed") return;
-            showState("failed");
-        };
+        getIce().then((ice) => {
+            pc = new RTCPeerConnection(ice);
+            pc.ontrack = (event) => {
+                stopTimers();
+                attachStream(event.streams[0]);
+                showVideo();
+                keepAlive();
+            };
+            pc.onconnectionstatechange = () => {
+                if (pc?.connectionState !== "failed") return;
+                showState("failed");
+            };
 
-        pc.setRemoteDescription({ type: "offer", sdp: offerSdp })
-            .then(() => pc.createAnswer())
-            .then((answer) =>
-                pc.setLocalDescription(answer).then(() => waitForIce(pc)),
-            )
-            .then(() =>
-                fetch(`/api/stream/viewers/${viewerId}/answer`, {
-                    method: "PUT",
-                    headers: { "content-type": "application/json" },
-                    body: JSON.stringify({ sdp: pc.localDescription.sdp }),
-                }),
-            )
-            .catch(() => {});
+            pc.setRemoteDescription({ type: "offer", sdp: offerSdp })
+                .then(() => pc.createAnswer())
+                .then((answer) =>
+                    pc.setLocalDescription(answer).then(() => waitForIce(pc)),
+                )
+                .then(() =>
+                    fetch(`/api/stream/viewers/${viewerId}/answer`, {
+                        method: "PUT",
+                        headers: { "content-type": "application/json" },
+                        body: JSON.stringify({ sdp: pc.localDescription.sdp }),
+                    }),
+                )
+                .catch(() => {});
+        });
     }
 
     function showVideo() {

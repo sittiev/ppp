@@ -10,6 +10,9 @@ const config = {
     visitorSalt: process.env.VISITOR_SALT,
     broadcastKey: process.env.BROADCAST_KEY,
     streamViewerCap: Number(process.env.STREAM_VIEWER_CAP) || 5,
+    turnUrls: process.env.TURN_URLS,
+    turnUser: process.env.TURN_USER,
+    turnPass: process.env.TURN_PASS,
 };
 
 if (!config.lastfmUser || !config.lastfmKey) {
@@ -39,6 +42,12 @@ if (!config.databaseUrl || !config.visitorSalt) {
 if (!config.broadcastKey) {
     console.warn(
         "Aviso: BROADCAST_KEY não definido. /broadcast não consegue iniciar transmissão.",
+    );
+}
+
+if (!config.turnUrls || !config.turnUser || !config.turnPass) {
+    console.warn(
+        "Aviso: TURN_URLS, TURN_USER ou TURN_PASS não definidos. Stream usa só STUN e pode falhar atrás de NAT restrito.",
     );
 }
 

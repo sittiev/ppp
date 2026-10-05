@@ -258,6 +258,28 @@ app.get("/api/visitors", async (c) => {
     }
 });
 
+app.get("/api/stream/ice", (c) => {
+    const urls = (config.turnUrls || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    const stun = urls.filter((entry) => entry.startsWith("stun:"));
+    const turn = urls.filter((entry) => entry.startsWith("turn"));
+    if (!turn.length || !config.turnUser || !config.turnPass) {
+        return c.json({
+            iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+        });
+    }
+    const iceServers = [];
+    if (stun.length) iceServers.push({ urls: stun });
+    iceServers.push({
+        urls: turn,
+        username: config.turnUser,
+        credential: config.turnPass,
+    });
+    return c.json({ iceServers });
+});
+
 app.get("/api/stream/state", async (c) => {
     try {
         return c.json(await getStreamState());
