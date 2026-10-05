@@ -17,11 +17,24 @@
     var empty = document.getElementById("bc-empty");
     var list = document.getElementById("bc-viewers");
     var closeBtn = document.getElementById("bc-close");
+    var audioCheck = document.getElementById("bc-audio");
+    var audioHint = document.getElementById("bc-audio-hint");
+    var qualitySelect = document.getElementById("bc-quality");
 
     if (!keyInput || !startBtn || !list) return;
 
+    audioCheck.addEventListener("change", () => {
+        sayAudio(
+            audioCheck.checked
+                ? "Na janela do Chrome, ligue “Compartilhar com áudio do sistema” antes de compartir."
+                : "O vídeo vai sem som.",
+        );
+    });
+
     var sessionId = null;
     var stream = null;
+    var audioTrack = null;
+    var quality = QUALITY_PRESETS.padrao;
     var broadcastKey = "";
     var peers = {};
     var pollTimer = null;
@@ -33,6 +46,11 @@
     function say(text, isError) {
         hint.textContent = text;
         hint.classList.toggle("is-error", Boolean(isError));
+    }
+
+    function sayAudio(text, isError) {
+        audioHint.textContent = text;
+        audioHint.classList.toggle("is-error", Boolean(isError));
     }
 
     function report(text) {
@@ -70,12 +88,33 @@
     }
 
     function stopLocalTracks() {
-        if (!stream) return;
-        stream.getTracks().forEach((track) => {
-            track.onended = null;
-            track.stop();
-        });
+        if (stream) {
+            stream.getTracks().forEach((track) => {
+                track.onended = null;
+                track.stop();
+            });
+        }
         stream = null;
+        audioTrack = null;
+    }
+
+    function adoptSystemAudio(captured) {
+        var track = captured.getAudioTracks()[0] || null;
+        if (!track) return null;
+        audioTrack = track;
+        track.onended = () => {
+            sayAudio("O som do desktop parou. O vídeo continua.", true);
+            stopAudioTrack();
+        };
+        return track;
+    }
+
+    function stopAudioTrack() {
+        if (!audioTrack) return;
+        audioTrack.onended = null;
+        audioTrack.stop();
+        if (stream) stream.removeTrack(audioTrack);
+        audioTrack = null;
     }
 
     function renderViewers() {
@@ -107,6 +146,7 @@
                 metric("vídeo", stat.resolution || "—") +
                 metric("fps", stat.fps === undefined ? "—" : String(stat.fps)) +
                 metric("bitrate", stat.bitrate || "—") +
+                metric("áudio", stat.audio || "—") +
                 metric("perda", stat.loss || "—") +
                 metric("ping", stat.rtt || "—") +
                 metric("jitter", stat.jitter || "—") +
@@ -184,15 +224,26 @@
     }
 
     async function tuneSender(node) {
-        var sender = node.getSenders()[0];
+        var senders = node.getSenders();
+        await Promise.all(
+            senders.map((sender) => tuneOneSender(sender, sender.track?.kind)),
+        );
+    }
+
+    async function tuneOneSender(sender, kind) {
         if (!sender) return;
         try {
             var params = await sender.getParameters();
             if (!params.encodings?.length) {
                 params.encodings = [{}];
             }
-            params.encodings[0].maxBitrate = MAX_BITRATE;
-            params.encodings[0].maxFramerate = MAX_FRAMERATE;
+            if (kind === "audio") {
+                params.encodings[0].maxBitrate = MAX_AUDIO_BITRATE;
+                await sender.setParameters(params);
+                return;
+            }
+            params.encodings[0].maxBitrate = quality.bitrate;
+            params.encodings[0].maxFramerate = quality.framerate;
             params.encodings[0].scaleResolutionDownBy = 1;
             params.degradationPreference = "maintain-resolution";
             await sender.setParameters(params);
@@ -232,6 +283,9 @@
             stream.getTracks().forEach((track) => {
                 node.addTrack(track, stream);
             });
+            if (audioTrack && !stream.getTracks().includes(audioTrack)) {
+                node.addTrack(audioTrack, stream);
+            }
             node.onconnectionstatechange = () => {
                 var connectionState = node.connectionState;
                 if (connectionState === "connected") {
@@ -372,6 +426,7 @@
             node.getStats()
                 .then((report) => {
                     var outbound = null;
+                    var outboundAudio = null;
                     var inbound = null;
                     var pair = null;
                     report.forEach((sample) => {
@@ -379,12 +434,11 @@
                             pair = sample;
                         }
                         if (sample.rid) return;
-                        if (
-                            sample.type === "outbound-rtp" &&
-                            sample.kind === "video" &&
-                            !outbound
-                        ) {
-                            outbound = sample;
+                        if (sample.type === "outbound-rtp") {
+                            if (sample.kind === "video" && !outbound)
+                                outbound = sample;
+                            if (sample.kind === "audio" && !outboundAudio)
+                                outboundAudio = sample;
                         }
                         if (
                             sample.type === "remote-inbound-rtp" &&
@@ -410,10 +464,19 @@
                             ? (outbound.framesSent - (previous.frames || 0)) /
                               seconds
                             : 0;
+                    var audioKbps =
+                        outboundAudio && seconds > 0
+                            ? ((outboundAudio.bytesSent -
+                                  (previous.audioBytes || 0)) *
+                                  8) /
+                              seconds /
+                              1000
+                            : 0;
                     metrics[viewerId] = {
                         at: now,
                         bytes: outbound.bytesSent,
                         frames: outbound.framesSent,
+                        audioBytes: outboundAudio?.bytesSent ?? null,
                         resolution:
                             outbound.frameWidth && outbound.frameHeight
                                 ? `${outbound.frameWidth}×${outbound.frameHeight}`
@@ -421,6 +484,11 @@
                         fps: fps > 0 ? fps.toFixed(0) : "—",
                         bitrate:
                             bitrate > 0 ? `${bitrate.toFixed(0)} kbps` : "—",
+                        audio: !outboundAudio
+                            ? "—"
+                            : audioKbps > 0
+                              ? `${audioKbps.toFixed(0)} kbps`
+                              : "mudo",
                         loss: inbound ? `${inbound.packetsLost} pac` : "—",
                         rtt: pair
                             ? Math.round(pair.currentRoundTripTime * 1000) +

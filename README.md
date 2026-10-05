@@ -19,6 +19,34 @@ em `/broadcast`. A partir daí aparece um item **transmitir** na barra de
 status da página inicial, que só aparece para quem já tem a chave neste
 navegador.
 
+### Áudio do desktop
+
+No Chromium do Linux o seletor de tela esconde o som do sistema por padrão.
+Ele só oferece quando o Chrome sobe com a flag que habilita o loopback do
+PulseAudio:
+
+```bash
+google-chrome --enable-features=PulseaudioLoopbackForScreenShare \
+              --disable-features=WebRtcAllowInputVolumeAdjustment
+```
+
+Sem a flag o seletor não tem a opção, e o painel avisa *"o seletor não
+devolveu áudio do sistema"*. Com a flag aparece um botão **Compartilhar com
+áudio do sistema**, desligado por padrão. O áudio vem na própria captura de tela
+(o Chrome rotula a track de `System Audio`) — não é um device separado para
+escolher.
+
+1. Ligar **Transmitir o som do desktop** no painel.
+2. Na janela do Chrome, **ligar o botão "Compartilhar com áudio do sistema"** e
+   só então clicar em Compartilhar. Ele aparece desligado por padrão, então
+   compartilhar sem ligar isso entrega vídeo mudo sem aviso.
+3. O visitante vê um botão **Ativar som** sobre o vídeo. O navegador exige um
+   clique para tocar áudio, então o som começa mudo por regra dele, não por
+   escolha nossa.
+
+Se o áudio do sistema for interrompido no meio (mudo no volume, saída
+trocada), o vídeo continua e o painel avisa.
+
 Para parar, clicar em **Encerrar** (ou em "Deixar de compartilhar" na barra do
 Chrome). Fechar a aba também encerra em 20 segundos.
 

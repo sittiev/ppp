@@ -25,6 +25,7 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - Passo a passo para reportar bug na aba Issues do repositório, escrito para quem nunca abriu o GitHub.
 - Novo programa Tela: quem clica abre a tela do Rafael ao vivo, direto do computador dele, sem passar por servidor de vídeo no meio.
 - A janela avisa quando não está ninguém transmitindo e acende sozinha assim que ele começa.
+- Dá para transmitir o som do desktop junto com a imagem.
 - O painel de transmissão mostra resolução, quadros por segundo, bitrate, perda e latência de cada espectador.
 - O painel também diz de onde cada espectador está assistindo: navegador, sistema, se é celular ou computador, e o tamanho da janela, com o ícone do sistema. O detalhe técnico completo fica no hover.
 - Até 5 pessoas assistindo ao mesmo tempo.

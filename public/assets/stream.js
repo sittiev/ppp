@@ -13,6 +13,7 @@
     var actions = document.getElementById("stream-actions");
     var retry = document.getElementById("stream-retry");
     var close = document.getElementById("stream-close");
+    var soundBtn = document.getElementById("stream-sound");
 
     if (!stage || !video || !headline) return;
 
@@ -74,6 +75,34 @@
         detail.textContent = copy.info;
         progress.hidden = !copy.busy;
         actions.hidden = !copy.retry;
+        soundBtn.hidden = true;
+    }
+
+    function attachStream(incoming) {
+        if (!incoming) return;
+        if (!video.srcObject) {
+            video.srcObject = incoming;
+            return;
+        }
+        incoming.getTracks().forEach((track) => {
+            if (video.srcObject.getTracks().includes(track)) return;
+            video.srcObject.addTrack(track);
+        });
+    }
+
+    function hasAudioTrack() {
+        if (pc?.getReceivers().some((r) => r.track?.kind === "audio"))
+            return true;
+        return Boolean(
+            video.srcObject
+                ?.getAudioTracks()
+                .some((track) => track.readyState === "live"),
+        );
+    }
+
+    function showSoundButton() {
+        if (!live || !hasAudioTrack() || !video.muted) return;
+        soundBtn.hidden = false;
     }
 
     function stopTimers() {
@@ -101,6 +130,7 @@
         offerApplied = false;
         video.srcObject = null;
         video.hidden = true;
+        video.muted = true;
         stage.hidden = false;
         render(state);
     }
@@ -223,6 +253,7 @@
                 live = true;
                 stage.hidden = true;
                 video.hidden = false;
+                showSoundButton();
             },
             () => {
                 live = false;
@@ -233,6 +264,15 @@
         );
     }
 
+    function enableSound() {
+        video.muted = false;
+        soundBtn.hidden = true;
+        video.play().catch(() => {
+            video.muted = true;
+            soundBtn.hidden = false;
+        });
+    }
+
     function resumeOnGesture() {
         if (!video.srcObject || live) return;
         video.muted = true;
@@ -240,6 +280,7 @@
             () => {
                 stage.hidden = true;
                 video.hidden = false;
+                showSoundButton();
             },
             () => {},
         );
@@ -282,6 +323,7 @@
     close.addEventListener("click", () => {
         window.close();
     });
+    soundBtn.addEventListener("click", enableSound);
     document.addEventListener("pointerdown", resumeOnGesture);
 
     reset();
