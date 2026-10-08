@@ -63,4 +63,5 @@ Variáveis: `BROADCAST_KEY` (obrigatória) e `STREAM_VIEWER_CAP` (padrão 5).
 - [ ] Otimizar tempo de carregamento usando cache para a página e imagens e remover chamadas externas.
 - [x] Utilizar scss (Sass) para máxima compatibilidade no css gerado.
 - [x] Integrar Biome e Husky para padronização do código JavaScript.
+- [ ] Adicionar opção de usuários excluírem suas mensagens no guestbook.
 - [x] Corrigir clippyjs: balão estoura a viewport em telas estreitas e textos não quebram.
