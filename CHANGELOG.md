@@ -33,6 +33,8 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - Novo programa Skate 3, que abre o skate.aaddpp.lol em nova aba.
 - A grade de programas quebra de linha em telas estreitas, em vez de cortar o último ícone.
 - Em telas de até 480px os programas se distribuem na linha, sem sobrar faixa vazia à direita.
+- O clippy some de vez ao estreitar a janela, em vez de largar o balão parado no canto.
+- O balão do clippy acompanha ele no canto, em vez de ficar preso no lugar antigo com o texto vazando.
 
 ### Changed
 

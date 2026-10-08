@@ -32,15 +32,26 @@ if (window.matchMedia("(min-width: 481px)").matches) {
     }
 
     function moveToCorner() {
-        agent.moveTo(window.innerWidth - 140, window.innerHeight - 110);
+        agent.moveTo(window.innerWidth - 140, window.innerHeight - 110, 0);
     }
 
+    moveToCorner();
     speakNext();
-    setInterval(speakNext, 10000);
-    setInterval(() => agent.animate(), 3000);
-    setInterval(() => agent.play("Congratulate"), 15000);
-    setInterval(moveToCorner, 4000);
+    var timers = [
+        setInterval(speakNext, 10000),
+        setInterval(() => agent.animate(), 3000),
+        setInterval(() => agent.play("Congratulate"), 15000),
+    ];
     window.addEventListener("resize", moveToCorner);
+    window
+        .matchMedia("(max-width: 480px)")
+        .addEventListener("change", (event) => {
+            if (!event.matches) return;
+            timers.forEach((timer) => {
+                clearInterval(timer);
+            });
+            agent.dispose();
+        });
 
     document.addEventListener(
         "click",
