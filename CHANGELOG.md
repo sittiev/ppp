@@ -29,6 +29,10 @@ Como manter: anote em `Unreleased` o que muda para quem visita. Sem despejo de `
 - O painel de transmissão mostra resolução, quadros por segundo, bitrate, perda e latência de cada espectador.
 - O painel também diz de onde cada espectador está assistindo: navegador, sistema, se é celular ou computador, e o tamanho da janela, com o ícone do sistema. O detalhe técnico completo fica no hover.
 - Até 5 pessoas assistindo ao mesmo tempo.
+- Novo programa BlackOps, com o ícone blackops, que abre o vel.gg em nova aba.
+- Novo programa Skate 3, que abre o skate.aaddpp.lol em nova aba.
+- A grade de programas quebra de linha em telas estreitas, em vez de cortar o último ícone.
+- Em telas de até 480px os programas se distribuem na linha, sem sobrar faixa vazia à direita.
 
 ### Changed
 

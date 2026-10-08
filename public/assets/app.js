@@ -71,6 +71,12 @@
         });
     }
 
+    document.querySelectorAll(".desktop-app[data-open]").forEach((app) => {
+        app.addEventListener("click", () => {
+            window.open(app.dataset.open, "_blank", "noopener");
+        });
+    });
+
     var bcOpen = document.getElementById("bc-open");
     if (bcOpen && sessionStorage.getItem("stream.broadcastKey")) {
         bcOpen.hidden = false;

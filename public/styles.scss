@@ -684,6 +684,10 @@ a:focus-visible,
     .np-artist {
         font-size: 0.82rem;
     }
+
+    .desktop-apps {
+        justify-content: space-evenly;
+    }
 }
 
 @media (max-width: 520px) {
@@ -866,6 +870,7 @@ a:focus-visible,
 
 .desktop-apps {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     padding: 4px 0;
 }
@@ -883,6 +888,7 @@ a:focus-visible,
     font-family: var(--font-ui);
     font-size: 0.72rem;
     color: #fff;
+    text-decoration: none;
     text-shadow:
         1px 1px 2px rgba(0, 0, 0, 1),
         -1px -1px 2px rgba(0, 0, 0, 0.4),
