@@ -1,6 +1,6 @@
 ## changes
 
-[changelog](./CHANGELOG.md).
+[changelog](./CHANGELOG.md)
 
 ## todo
 
